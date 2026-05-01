@@ -9,6 +9,7 @@ export async function POST(req: Request) {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${process.env.MERCADOPAGO_ACCESS_TOKEN}`,
+        "X-Idempotency-Key": Date.now().toString(), // 🔥 IMPORTANTE
       },
       body: JSON.stringify({
         items: [
@@ -16,15 +17,15 @@ export async function POST(req: Request) {
             title: `Turno Dr. ${body.doctor}`,
             quantity: 1,
             unit_price: 3000,
-            currency_id: "ARS", // 🔥 CLAVE
+            currency_id: "ARS",
           },
         ],
         payer: {
           name: body.nombre || "Cliente",
         },
         back_urls: {
-          success: `${process.env.NEXT_PUBLIC_URL}`,
-          failure: `${process.env.NEXT_PUBLIC_URL}`,
+          success: `${process.env.NEXT_PUBLIC_URL}/exito`,
+          failure: `${process.env.NEXT_PUBLIC_URL}/error`,
         },
         auto_return: "approved",
       }),
@@ -34,10 +35,11 @@ export async function POST(req: Request) {
 
     console.log("MP RESPONSE:", data);
 
+    // 🔥 clave para debug
     if (!data.init_point) {
       return NextResponse.json({
-        error: "Mercado Pago no devolvió link",
-        detalle: data,
+        url: null,
+        error: data,
       });
     }
 
@@ -46,8 +48,11 @@ export async function POST(req: Request) {
     });
 
   } catch (error) {
+    console.log("ERROR:", error);
+
     return NextResponse.json({
-      error: "Error en servidor",
+      url: null,
+      error: "Error servidor",
     });
   }
 }
