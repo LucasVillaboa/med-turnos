@@ -11,6 +11,7 @@ export default function ReservarTurno() {
   const [form, setForm] = useState({
     nombre: "",
     telefono: "",
+    email: "",
     fecha: "",
     hora: "",
   });
@@ -108,6 +109,13 @@ export default function ReservarTurno() {
             required
             onChange={(e) => setForm({ ...form, telefono: e.target.value })}
           />
+          <input
+  type="emaill"
+  placeholder="Email"
+  className="border p-2 rounded"
+  required
+  onChange={(e) => setForm({ ...form, email: e.target.value })}
+/>
 
           <input
             type="date"
