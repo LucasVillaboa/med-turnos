@@ -22,7 +22,16 @@ export async function POST(req: Request) {
         ],
         payer: {
           name: body.nombre || "Cliente",
+          email: body.email,
         },
+        metadata: {
+  nombre: body.nombre,
+  telefono: body.telefono,
+  email: body.email,
+  fecha: body.fecha,
+  hora: body.hora,
+  doctor: body.doctor,
+},
         back_urls: {
           success: `${process.env.NEXT_PUBLIC_URL}/exito`,
           failure: `${process.env.NEXT_PUBLIC_URL}/error`,
