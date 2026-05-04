@@ -40,7 +40,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: true });
     }
 
-    const metadata = payment.metadata;
+    const metadata = payment.metadata || payment.additional_info || {};
 
     if (!metadata) {
       console.log("Sin metadata");
@@ -48,16 +48,16 @@ export async function POST(req: Request) {
     }
 
     // 👉 guardar turno en BD
-    const { error } = await supabase.from("turnos").insert([
-      {
-        nombre: metadata.nombre,
-        telefono: metadata.telefono,
-        email: metadata.email,
-        fecha: metadata.fecha,
-        hora: metadata.hora,
-        doctor: metadata.doctor,
-      },
-    ]);
+const { error } = await supabase.from("turnos").insert([
+  {
+    nombre: metadata.nombre || "Sin nombre",
+    telefono: metadata.telefono || "Sin telefono",
+    email: metadata.email || "Sin email",
+    fecha: metadata.fecha || "Sin fecha",
+    hora: metadata.hora || "Sin hora",
+    doctor: metadata.doctor || "General",
+  },
+]);
 
     if (error) {
       console.log("Error guardando turno:", error);
