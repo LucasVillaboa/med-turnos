@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
-export default function Exito() {
+function ExitoContent() {
   const params = useSearchParams();
 
   useEffect(() => {
@@ -15,7 +15,15 @@ export default function Exito() {
 
       supabase.from("turnos").insert([turno]);
     }
-  }, []);
+  }, [params]);
 
   return <h1>Pago exitoso 🎉</h1>;
+}
+
+export default function Exito() {
+  return (
+    <Suspense fallback={<p>Cargando...</p>}>
+      <ExitoContent />
+    </Suspense>
+  );
 }
