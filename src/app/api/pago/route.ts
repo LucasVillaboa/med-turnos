@@ -16,11 +16,12 @@ export async function POST(req: Request) {
           {
             title: `Turno Dr. ${body.doctor}`,
             quantity: 1,
-            unit_price: 1, // 💰 podés cambiarlo
+            unit_price: 1,
             currency_id: "ARS",
           },
         ],
 
+        // ✔ metadata BIEN (esto lo usa el webhook)
         metadata: {
           nombre: body.nombre,
           telefono: body.telefono,
@@ -35,18 +36,9 @@ export async function POST(req: Request) {
           email: body.email,
         },
 
-        // 🔥 ACA VA LO QUE ME PEDISTE
+        // ❌ SIN data en URL (esto te estaba rompiendo todo)
         back_urls: {
-          success: `${process.env.NEXT_PUBLIC_URL}/exito?data=${encodeURIComponent(
-            JSON.stringify({
-              nombre: body.nombre,
-              telefono: body.telefono,
-              email: body.email,
-              fecha: body.fecha,
-              hora: body.hora,
-              doctor: body.doctor,
-            })
-          )}`,
+          success: `${process.env.NEXT_PUBLIC_URL}/exito`,
           failure: `${process.env.NEXT_PUBLIC_URL}/error`,
         },
 
@@ -56,7 +48,9 @@ export async function POST(req: Request) {
 
     const data = await response.json();
 
+    // 🔥 debug clave
     if (!data.init_point) {
+      console.log("ERROR MP:", data);
       return NextResponse.json({
         url: null,
         error: data,
@@ -68,6 +62,8 @@ export async function POST(req: Request) {
     });
 
   } catch (error) {
+    console.log("ERROR SERVER:", error);
+
     return NextResponse.json({
       url: null,
       error: "Error servidor",
