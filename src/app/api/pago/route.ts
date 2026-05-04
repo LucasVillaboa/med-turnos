@@ -9,7 +9,7 @@ export async function POST(req: Request) {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${process.env.MERCADOPAGO_ACCESS_TOKEN}`,
-        "X-Idempotency-Key": Date.now().toString(), // 🔥 IMPORTANTE
+        "X-Idempotency-Key": Date.now().toString(),
       },
       body: JSON.stringify({
         items: [
@@ -20,24 +20,27 @@ export async function POST(req: Request) {
             currency_id: "ARS",
           },
         ],
+
+        // 🔥 ACA VA (NO dentro de payer)
+        metadata: {
+          nombre: body.nombre,
+          telefono: body.telefono,
+          email: body.email,
+          fecha: body.fecha,
+          hora: body.hora,
+          doctor: body.doctor,
+        },
+
         payer: {
           name: body.nombre || "Cliente",
           email: body.email,
-
-                  metadata: {
-  nombre: body.nombre,
-  telefono: body.telefono,
-  email: body.email,
-  fecha: body.fecha,
-  hora: body.hora,
-  doctor: body.doctor,
-},
         },
 
         back_urls: {
           success: `${process.env.NEXT_PUBLIC_URL}/exito`,
           failure: `${process.env.NEXT_PUBLIC_URL}/error`,
         },
+
         auto_return: "approved",
       }),
     });
@@ -46,7 +49,6 @@ export async function POST(req: Request) {
 
     console.log("MP RESPONSE:", data);
 
-    // 🔥 clave para debug
     if (!data.init_point) {
       return NextResponse.json({
         url: null,
