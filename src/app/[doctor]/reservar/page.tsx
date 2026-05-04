@@ -94,12 +94,34 @@ export default function ReservarTurno() {
           onChange={(e) => setForm({ ...form, fecha: e.target.value })}
         />
 
-        <input
-          type="time"
+        {/* 🕒 HORARIOS CADA 30 MIN */}
+        <select
           className="border p-2"
           required
           onChange={(e) => setForm({ ...form, hora: e.target.value })}
-        />
+        >
+          <option value="">Seleccionar horario</option>
+
+          {[
+            "08:00","08:30",
+            "09:00","09:30",
+            "10:00","10:30",
+            "11:00","11:30",
+            "12:00","12:30",
+            "13:00","13:30",
+            "14:00","14:30",
+            "15:00","15:30",
+            "16:00","16:30",
+            "17:00","17:30",
+            "18:00","18:30",
+            "19:00","19:30",
+            "20:00"
+          ].map((hora) => (
+            <option key={hora} value={hora}>
+              {hora}
+            </option>
+          ))}
+        </select>
 
         <button className="bg-green-600 text-white p-2 rounded">
           Confirmar y pagar seña
