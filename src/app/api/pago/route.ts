@@ -16,7 +16,7 @@ export async function POST(req: Request) {
           {
             title: `Turno Dr. ${body.doctor}`,
             quantity: 1,
-            unit_price: 1,
+            unit_price: 10,
             currency_id: "ARS",
           },
         ],
