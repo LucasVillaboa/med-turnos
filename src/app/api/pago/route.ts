@@ -36,13 +36,13 @@ export async function POST(req: Request) {
           email: body.email,
         },
 
-        // ❌ SIN data en URL (esto te estaba rompiendo todo)
         back_urls: {
-          success: `${process.env.NEXT_PUBLIC_URL}/exito`,
-          failure: `${process.env.NEXT_PUBLIC_URL}/error`,
-        },
-
-        auto_return: "approved",
+  success: `${process.env.NEXT_PUBLIC_URL}/exito`,
+  failure: `${process.env.NEXT_PUBLIC_URL}/error`,
+  pending: `${process.env.NEXT_PUBLIC_URL}/exito`,
+},
+auto_return: "approved",
+       
       }),
     });
 
