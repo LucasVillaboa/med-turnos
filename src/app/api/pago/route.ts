@@ -36,12 +36,13 @@ export async function POST(req: Request) {
           email: body.email,
         },
 
-        back_urls: {
+back_urls: {
   success: `${process.env.NEXT_PUBLIC_URL}/exito`,
   failure: `${process.env.NEXT_PUBLIC_URL}/error`,
   pending: `${process.env.NEXT_PUBLIC_URL}/exito`,
 },
 auto_return: "approved",
+notification_url: `${process.env.NEXT_PUBLIC_URL}/api/webhook`,
        
       }),
     });
