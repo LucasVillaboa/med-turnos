@@ -16,7 +16,7 @@ body: JSON.stringify({
     {
       title: `Turno Dr. ${body.doctor}`,
       quantity: 1,
-      unit_price: 10,
+      unit_price: 1,
       currency_id: "ARS",
     },
   ],
