@@ -21,7 +21,7 @@ export default function Exito() {
       const { error } = await supabase.from("turnos").insert([data]);
 
       if (!error) {
-        localStorage.removeItem("turno"); // 🔥 evita duplicados
+        localStorage.removeItem("turno"); //  evita duplicados
       }
     };
 

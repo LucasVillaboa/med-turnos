@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
-// 🔥 cliente con permisos completos
+//  cliente con permisos completos
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-// 🔥 función reutilizable
+//  función reutilizable
 async function handlePayment(paymentId: string) {
   try {
     const res = await fetch(
@@ -23,14 +23,14 @@ async function handlePayment(paymentId: string) {
 
     console.log("PAYMENT:", payment);
 
-    // ❌ si no está aprobado, no guardamos
+    //  si no está aprobado, no guardamos
     if (payment.status !== "approved") {
       return NextResponse.json({ ok: false, status: payment.status });
     }
 
     const metadata = payment.metadata || {};
 
-    // 🔥 INSERT EN BD
+    //  INSERT EN BD
     const { error } = await supabase.from("turnos").insert([
       {
         nombre: metadata.nombre,
@@ -57,7 +57,7 @@ async function handlePayment(paymentId: string) {
   }
 }
 
-// 🔥 para cuando Mercado Pago llama (POST)
+//  para cuando Mercado Pago llama (POST)
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -77,7 +77,7 @@ export async function POST(req: Request) {
   }
 }
 
-// 🔥 para cuando vos lo llamás desde /exito (GET)
+//  para cuando vos lo llamás desde /exito (GET)
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const paymentId = searchParams.get("payment_id");
