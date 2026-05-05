@@ -42,7 +42,7 @@ back_urls: {
   pending: `${process.env.NEXT_PUBLIC_URL}/exito`,
 },
 auto_return: "approved",
-notification_url: `${process.env.NEXT_PUBLIC_URL}/api/webhook`,
+
        
       }),
     });
