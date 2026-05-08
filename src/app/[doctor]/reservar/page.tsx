@@ -75,18 +75,27 @@ export default function ReservarTurno() {
     }
   };
 
-  return (
-    <div className="p-10">
-      <h2 className="text-2xl font-bold mb-4">
-        Reservar turno con Dr. {doctor}
-      </h2>
+return (
+  <div className="min-h-screen bg-gradient-to-b from-green-50 to-white flex items-center justify-center px-4 py-10">
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-md">
+    <div className="w-full max-w-2xl bg-white rounded-3xl shadow-xl border border-green-100 p-8">
+
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-bold text-green-700">
+          Reserva tu turno
+        </h1>
+
+        <p className="text-slate-500 mt-2">
+          Dr. {doctor}
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
         <input
           type="text"
-          placeholder="Nombre"
-          className="border p-2"
+          placeholder="Nombre completo"
+          className="border border-slate-200 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-green-500"
           required
           onChange={(e) => setForm({ ...form, nombre: e.target.value })}
         />
@@ -94,7 +103,7 @@ export default function ReservarTurno() {
         <input
           type="text"
           placeholder="Teléfono"
-          className="border p-2"
+          className="border border-slate-200 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-green-500"
           required
           onChange={(e) => setForm({ ...form, telefono: e.target.value })}
         />
@@ -102,49 +111,89 @@ export default function ReservarTurno() {
         <input
           type="email"
           placeholder="Email"
-          className="border p-2"
+          className="border border-slate-200 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-green-500"
           required
           onChange={(e) => setForm({ ...form, email: e.target.value })}
         />
 
-        <input
-          type="date"
-          className="border p-2"
-          required
-          onChange={(e) => handleFechaChange(e.target.value)}
-        />
+        <div>
+          <label className="block mb-2 text-sm font-medium text-slate-600">
+            Seleccionar fecha
+          </label>
 
-        {/* 🔥 HORARIOS SOLO SI HAY FECHA */}
+          <input
+            type="date"
+            className="w-full border border-slate-200 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-green-500"
+            required
+            onChange={(e) => handleFechaChange(e.target.value)}
+          />
+        </div>
+
         {form.fecha && (
-          <div className="grid grid-cols-3 gap-2">
-            {horarios.map((h) => {
-              const ocupado = ocupados.includes(h);
+          <div className="mt-4">
 
-              return (
-                <button
-                  type="button"
-                  key={h}
-                  disabled={ocupado}
-                  onClick={() => setForm({ ...form, hora: h })}
-                  className={`p-2 rounded border text-sm
-                    ${ocupado ? "bg-gray-300 cursor-not-allowed" : ""}
-                    ${form.hora === h ? "bg-green-500 text-white" : "bg-white"}
-                  `}
-                >
-                  {h}
-                </button>
-              );
-            })}
+            <h3 className="font-semibold text-slate-700 mb-3">
+              Horarios disponibles
+            </h3>
+
+            <div className="grid grid-cols-3 md:grid-cols-4 gap-3">
+
+              {horarios.map((h) => {
+                const ocupado = ocupados.includes(h);
+
+                return (
+                  <button
+                    type="button"
+                    key={h}
+                    disabled={ocupado}
+                    onClick={() => setForm({ ...form, hora: h })}
+                    className={`
+                      p-3
+                      rounded-2xl
+                      text-sm
+                      font-medium
+                      transition-all
+                      border
+
+                      ${
+                        ocupado
+                          ? "bg-slate-200 text-slate-400 cursor-not-allowed border-slate-200"
+                          : form.hora === h
+                          ? "bg-green-600 text-white border-green-600 scale-105"
+                          : "bg-white hover:bg-green-50 border-slate-200"
+                      }
+                    `}
+                  >
+                    {h}
+                  </button>
+                );
+              })}
+
+            </div>
           </div>
         )}
 
         <button
           disabled={!form.hora}
-          className="bg-green-600 text-white p-2 rounded disabled:bg-gray-400"
+          className="
+            mt-6
+            bg-green-600
+            hover:bg-green-700
+            transition
+            text-white
+            p-4
+            rounded-2xl
+            font-semibold
+            text-lg
+            disabled:bg-slate-300
+            disabled:cursor-not-allowed
+          "
         >
           Confirmar y pagar seña
         </button>
+
       </form>
     </div>
-  );
+  </div>
+);
 }
