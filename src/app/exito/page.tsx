@@ -1,39 +1,50 @@
 "use client";
 
 import { useEffect } from "react";
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 export default function Exito() {
 
   useEffect(() => {
+
     const turno = localStorage.getItem("turno");
 
     if (!turno) return;
 
-    const data = JSON.parse(turno);
+    const confirmar = async () => {
 
-    const guardar = async () => {
-      const { error } = await supabase.from("turnos").insert([data]);
+      const data = JSON.parse(turno);
 
-      if (!error) {
-        localStorage.removeItem("turno"); //  evita duplicados
+      const res = await fetch("/api/confirmar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (res.ok) {
+        localStorage.removeItem("turno");
       }
     };
 
-    guardar();
+    confirmar();
+
   }, []);
 
   return (
-    <div className="p-10 text-center">
-      <h1 className="text-2xl font-bold text-green-600">
-        Pago exitoso 🎉
-      </h1>
-      <p>Tu turno fue confirmado</p>
+    <div className="min-h-screen flex items-center justify-center bg-green-50 px-4">
+
+      <div className="bg-white p-10 rounded-3xl shadow-xl text-center max-w-md w-full">
+
+        <h1 className="text-3xl font-bold text-green-600 mb-4">
+          Pago exitoso 🎉
+        </h1>
+
+        <p className="text-slate-600">
+          Tu turno fue confirmado correctamente.
+        </p>
+
+      </div>
     </div>
   );
 }
