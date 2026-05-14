@@ -93,10 +93,7 @@ export default function ReservarTurno() {
             Reserva tu turno
           </h1>
 
-          <p className="text-slate-500 mt-3 text-base">
-            Dr. {doctor}
-          </p>
-
+    
         </div>
 
         {/* FORM */}
@@ -240,7 +237,31 @@ export default function ReservarTurno() {
 
             </div>
           )}
+<div className="mt-6 bg-emerald-50 border border-emerald-200 rounded-2xl p-4">
 
+  <p className="text-slate-800 font-semibold mb-2">
+    Información de pago
+  </p>
+
+  <div className="space-y-1 text-sm text-slate-600">
+
+    <p>
+      Valor de la consulta:
+      <strong className="text-slate-800"> $20.000</strong>
+    </p>
+
+    <p>
+      Seña online:
+      <strong className="text-emerald-700"> $5.000</strong>
+    </p>
+
+    <p>
+      El saldo restante se abona el día del turno.
+    </p>
+
+  </div>
+
+</div>
           {/* BOTÓN */}
           <button
             disabled={!form.hora}
