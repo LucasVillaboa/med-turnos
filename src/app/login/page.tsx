@@ -11,15 +11,36 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
 
   const handleLogin = (e: any) => {
+
     e.preventDefault();
 
-    // 🔥 LOGIN SIMPLE MVP
+    // 🔥 USUARIOS DEMO
+    const users: any = {
+      consultorio: {
+        password: "123456",
+        doctor: "sandoval",
+      },
+
+      lopez: {
+        password: "123456",
+        doctor: "lopez",
+      },
+    };
+
+    const user = users[usuario];
+
     if (
-      usuario === "consultorio" &&
-      password === "123456"
+      user &&
+      user.password === password
     ) {
 
       localStorage.setItem("auth", "true");
+
+      // 🔥 GUARDAR DOCTOR
+      localStorage.setItem(
+        "doctor",
+        user.doctor
+      );
 
       router.push("/panel");
 
