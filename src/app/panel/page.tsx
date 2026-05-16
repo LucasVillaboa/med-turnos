@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 
@@ -15,6 +15,8 @@ export default function PanelPage() {
 
   const [turnos, setTurnos] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const [busqueda, setBusqueda] = useState("");
 
   // 🔥 PROTEGER PANEL
   useEffect(() => {
@@ -79,6 +81,17 @@ export default function PanelPage() {
     router.push("/login");
   };
 
+  // 🔥 FILTRO BÚSQUEDA
+  const turnosFiltrados = useMemo(() => {
+
+    return turnos.filter((turno) =>
+      turno.nombre?.toLowerCase().includes(busqueda.toLowerCase()) ||
+      turno.email?.toLowerCase().includes(busqueda.toLowerCase()) ||
+      turno.telefono?.toLowerCase().includes(busqueda.toLowerCase())
+    );
+
+  }, [turnos, busqueda]);
+
   // 🔥 ESTADÍSTICAS
   const totalTurnos = turnos.length;
 
@@ -93,37 +106,55 @@ export default function PanelPage() {
   ).length;
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-100">
 
-      {/* HEADER */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
+      {/* SIDEBAR */}
+      <div className="fixed top-0 left-0 h-full w-72 bg-slate-900 text-white hidden lg:flex flex-col">
 
-        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+        <div className="p-8 border-b border-slate-800">
 
-          <div>
+          <div className="w-16 h-16 rounded-2xl bg-emerald-500 flex items-center justify-center text-3xl mb-4">
+            🩺
+          </div>
 
-            <h1 className="text-3xl font-bold text-slate-800">
-              Panel profesional
-            </h1>
+          <h2 className="text-2xl font-bold">
+            Med Turnos
+          </h2>
 
-            <p className="text-slate-500 text-sm mt-1">
-              Gestión de turnos y pacientes
+          <p className="text-slate-400 text-sm mt-2">
+            Panel profesional
+          </p>
+
+        </div>
+
+        <div className="flex-1 p-6">
+
+          <div className="bg-slate-800 rounded-2xl p-5">
+
+            <p className="text-slate-400 text-sm mb-1">
+              Estado del sistema
             </p>
 
+            <h3 className="text-emerald-400 font-semibold">
+              Operativo
+            </h3>
+
           </div>
+
+        </div>
+
+        <div className="p-6">
 
           <button
             onClick={logout}
             className="
+              w-full
               bg-red-500
               hover:bg-red-600
               transition
-              text-white
-              px-5
               py-3
               rounded-2xl
-              font-medium
-              shadow-sm
+              font-semibold
             "
           >
             Cerrar sesión
@@ -131,71 +162,178 @@ export default function PanelPage() {
 
         </div>
 
-      </header>
+      </div>
 
       {/* CONTENIDO */}
-      <main className="max-w-7xl mx-auto p-6">
+      <main className="lg:ml-72 p-4 md:p-8">
+
+        {/* HEADER MOBILE */}
+        <div className="lg:hidden mb-6">
+
+          <div className="bg-slate-900 rounded-3xl p-6 text-white">
+
+            <div className="flex items-center gap-4">
+
+              <div className="w-14 h-14 rounded-2xl bg-emerald-500 flex items-center justify-center text-2xl">
+                🩺
+              </div>
+
+              <div>
+
+                <h1 className="text-2xl font-bold">
+                  Med Turnos
+                </h1>
+
+                <p className="text-slate-300 text-sm">
+                  Panel profesional
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        {/* TOP */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+
+          <div>
+
+            <h1 className="text-4xl font-bold text-slate-800">
+              Dashboard
+            </h1>
+
+            <p className="text-slate-500 mt-2">
+              Gestión inteligente de turnos y pacientes
+            </p>
+
+          </div>
+
+          {/* BUSCADOR */}
+          <input
+            type="text"
+            placeholder="Buscar paciente..."
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            className="
+              w-full
+              md:w-80
+              bg-white
+              border
+              border-slate-200
+              rounded-2xl
+              px-5
+              py-4
+              outline-none
+              focus:ring-2
+              focus:ring-emerald-500
+            "
+          />
+
+        </div>
 
         {/* CARDS */}
         <div className="grid md:grid-cols-3 gap-6">
 
           {/* TOTAL */}
-          <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+          <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
 
-            <p className="text-slate-500 text-sm mb-2">
-              Total turnos
-            </p>
+            <div className="flex items-center justify-between mb-4">
 
-            <h2 className="text-4xl font-bold text-slate-800">
-              {totalTurnos}
-            </h2>
+              <div>
+
+                <p className="text-slate-500 text-sm">
+                  Total turnos
+                </p>
+
+                <h2 className="text-5xl font-bold text-slate-800 mt-2">
+                  {totalTurnos}
+                </h2>
+
+              </div>
+
+              <div className="w-14 h-14 rounded-2xl bg-emerald-100 flex items-center justify-center text-2xl">
+                📅
+              </div>
+
+            </div>
 
           </div>
 
           {/* PACIENTES */}
-          <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+          <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
 
-            <p className="text-slate-500 text-sm mb-2">
-              Pacientes únicos
-            </p>
+            <div className="flex items-center justify-between mb-4">
 
-            <h2 className="text-4xl font-bold text-slate-800">
-              {pacientesUnicos}
-            </h2>
+              <div>
+
+                <p className="text-slate-500 text-sm">
+                  Pacientes únicos
+                </p>
+
+                <h2 className="text-5xl font-bold text-slate-800 mt-2">
+                  {pacientesUnicos}
+                </h2>
+
+              </div>
+
+              <div className="w-14 h-14 rounded-2xl bg-blue-100 flex items-center justify-center text-2xl">
+                👥
+              </div>
+
+            </div>
 
           </div>
 
           {/* HOY */}
-          <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+          <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
 
-            <p className="text-slate-500 text-sm mb-2">
-              Turnos de hoy
-            </p>
+            <div className="flex items-center justify-between mb-4">
 
-            <h2 className="text-4xl font-bold text-emerald-600">
-              {turnosHoy}
-            </h2>
+              <div>
+
+                <p className="text-slate-500 text-sm">
+                  Turnos hoy
+                </p>
+
+                <h2 className="text-5xl font-bold text-emerald-600 mt-2">
+                  {turnosHoy}
+                </h2>
+
+              </div>
+
+              <div className="w-14 h-14 rounded-2xl bg-emerald-100 flex items-center justify-center text-2xl">
+                ✅
+              </div>
+
+            </div>
 
           </div>
 
         </div>
 
         {/* TABLA */}
-        <div className="mt-8 bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden">
+        <div className="mt-8 bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
 
           {/* HEADER TABLA */}
-          <div className="p-6 border-b border-slate-200 flex items-center justify-between">
+          <div className="p-6 border-b border-slate-200 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 
             <div>
 
-              <h2 className="text-xl font-bold text-slate-800">
+              <h2 className="text-2xl font-bold text-slate-800">
                 Próximos turnos
               </h2>
 
               <p className="text-slate-500 text-sm mt-1">
-                Listado de pacientes registrados
+                Administración de pacientes registrados
               </p>
 
+            </div>
+
+            <div className="bg-emerald-100 text-emerald-700 px-4 py-2 rounded-2xl text-sm font-semibold">
+              {turnosFiltrados.length} turnos encontrados
             </div>
 
           </div>
@@ -206,16 +344,20 @@ export default function PanelPage() {
               Cargando turnos...
             </div>
 
-          ) : turnos.length === 0 ? (
+          ) : turnosFiltrados.length === 0 ? (
 
-            <div className="p-10 text-center">
+            <div className="p-12 text-center">
 
-              <h3 className="text-xl font-semibold text-slate-700 mb-2">
-                Todavía no hay turnos
+              <div className="text-6xl mb-4">
+                📭
+              </div>
+
+              <h3 className="text-2xl font-bold text-slate-700 mb-2">
+                No hay turnos
               </h3>
 
               <p className="text-slate-500">
-                Los nuevos pacientes aparecerán acá automáticamente.
+                Los nuevos pacientes aparecerán automáticamente.
               </p>
 
             </div>
@@ -224,33 +366,37 @@ export default function PanelPage() {
 
             <div className="overflow-x-auto">
 
-              <table className="w-full">
+              <table className="w-full min-w-[900px]">
 
                 <thead className="bg-slate-100 text-slate-600 text-sm">
 
                   <tr>
 
-                    <th className="text-left p-4">
+                    <th className="text-left p-5">
                       Paciente
                     </th>
 
-                    <th className="text-left p-4">
+                    <th className="text-left p-5">
                       Fecha
                     </th>
 
-                    <th className="text-left p-4">
+                    <th className="text-left p-5">
                       Hora
                     </th>
 
-                    <th className="text-left p-4">
+                    <th className="text-left p-5">
                       Teléfono
                     </th>
 
-                    <th className="text-left p-4">
+                    <th className="text-left p-5">
                       Email
                     </th>
 
-                    <th className="text-left p-4">
+                    <th className="text-left p-5">
+                      Estado
+                    </th>
+
+                    <th className="text-left p-5">
                       Acciones
                     </th>
 
@@ -260,34 +406,70 @@ export default function PanelPage() {
 
                 <tbody>
 
-                  {turnos.map((turno) => (
+                  {turnosFiltrados.map((turno) => (
 
                     <tr
                       key={turno.id}
                       className="border-t border-slate-100 hover:bg-slate-50 transition"
                     >
 
-                      <td className="p-4 font-semibold text-slate-800">
-                        {turno.nombre}
+                      <td className="p-5">
+
+                        <div className="flex items-center gap-4">
+
+                          <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center font-bold text-emerald-700">
+                            {turno.nombre?.charAt(0)?.toUpperCase()}
+                          </div>
+
+                          <div>
+
+                            <p className="font-semibold text-slate-800">
+                              {turno.nombre}
+                            </p>
+
+                            <p className="text-sm text-slate-500">
+                              Paciente registrado
+                            </p>
+
+                          </div>
+
+                        </div>
+
                       </td>
 
-                      <td className="p-4 text-slate-600">
+                      <td className="p-5 text-slate-600">
                         {turno.fecha}
                       </td>
 
-                      <td className="p-4 text-slate-600">
+                      <td className="p-5 text-slate-600">
                         {turno.hora}
                       </td>
 
-                      <td className="p-4 text-slate-600">
+                      <td className="p-5 text-slate-600">
                         {turno.telefono}
                       </td>
 
-                      <td className="p-4 text-slate-600">
+                      <td className="p-5 text-slate-600">
                         {turno.email}
                       </td>
 
-                      <td className="p-4">
+                      <td className="p-5">
+
+                        <span className="
+                          bg-emerald-100
+                          text-emerald-700
+                          px-4
+                          py-2
+                          rounded-2xl
+                          text-sm
+                          font-semibold
+                        ">
+                          Confirmado
+                        </span>
+
+                      </td>
+
+                      <td className="p-5">
 
                         <button
                           onClick={() => eliminarTurno(turno.id)}
@@ -297,7 +479,7 @@ export default function PanelPage() {
                             text-red-600
                             px-4
                             py-2
-                            rounded-xl
+                            rounded-2xl
                             text-sm
                             font-medium
                             transition
