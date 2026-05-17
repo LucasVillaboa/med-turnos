@@ -95,10 +95,6 @@ export default function PanelPage() {
   // 🔥 ESTADÍSTICAS
   const totalTurnos = turnos.length;
 
-  const pacientesUnicos = new Set(
-    turnos.map((t) => t.email)
-  ).size;
-
   const fechaHoy = new Date().toISOString().split("T")[0];
 
   const turnosHoy = turnos.filter(
@@ -194,7 +190,6 @@ export default function PanelPage() {
 
               </div>
 
-              {/* 🔥 BOTÓN MOBILE */}
               <button
                 onClick={logout}
                 className="
@@ -218,47 +213,8 @@ export default function PanelPage() {
 
         </div>
 
-        {/* TOP */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
-
-          <div>
-
-          
-
-            <p className="text-slate-500 mt-2">
-              Gestión inteligente de turnos y pacientes
-            </p>
-
-          </div>
-
-          <input
-            type="text"
-            placeholder="Buscar paciente..."
-            value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)}
-            className="
-              w-full
-              md:w-80
-              bg-white
-              text-slate-900
-              placeholder:text-slate-400
-              border
-              border-slate-300
-              rounded-2xl
-              px-5
-              py-4
-              outline-none
-              shadow-sm
-              focus:ring-4
-              focus:ring-emerald-100
-              focus:border-emerald-500
-            "
-          />
-
-        </div>
-
-                {/* CARDS */}
-        <div className="grid md:grid-cols-3 gap-6">
+        {/* CARDS */}
+        <div className="grid md:grid-cols-2 gap-6">
 
           <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
 
@@ -278,30 +234,6 @@ export default function PanelPage() {
 
               <div className="w-14 h-14 rounded-2xl bg-emerald-100 flex items-center justify-center text-2xl">
                 📅
-              </div>
-
-            </div>
-
-          </div>
-
-          <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
-
-            <div className="flex items-center justify-between">
-
-              <div>
-
-                <p className="text-slate-500 text-sm">
-                  Pacientes únicos
-                </p>
-
-                <h2 className="text-5xl font-bold text-slate-800 mt-2">
-                  {pacientesUnicos}
-                </h2>
-
-              </div>
-
-              <div className="w-14 h-14 rounded-2xl bg-blue-100 flex items-center justify-center text-2xl">
-                👥
               </div>
 
             </div>
@@ -338,22 +270,50 @@ export default function PanelPage() {
         <div className="mt-8 bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
 
           {/* HEADER */}
-          <div className="p-6 border-b border-slate-200 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="p-6 border-b border-slate-200 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
 
             <div>
 
               <h2 className="text-2xl font-bold text-slate-800">
-                Próximos turnos
+                Agenda de pacientes
               </h2>
 
               <p className="text-slate-500 text-sm mt-1">
-                Administración de pacientes registrados
+                Administración de turnos registrados
               </p>
 
             </div>
 
-            <div className="bg-emerald-100 text-emerald-700 px-4 py-2 rounded-2xl text-sm font-semibold">
-              {turnosFiltrados.length} turnos encontrados
+            <div className="flex flex-col md:flex-row gap-3 w-full lg:w-auto">
+
+              <input
+                type="text"
+                placeholder="Buscar paciente..."
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+                className="
+                  w-full
+                  md:w-80
+                  bg-slate-50
+                  text-slate-900
+                  placeholder:text-slate-400
+                  border
+                  border-slate-300
+                  rounded-2xl
+                  px-5
+                  py-3
+                  outline-none
+                  shadow-sm
+                  focus:ring-4
+                  focus:ring-emerald-100
+                  focus:border-emerald-500
+                "
+              />
+
+              <div className="bg-emerald-100 text-emerald-700 px-4 py-3 rounded-2xl text-sm font-semibold whitespace-nowrap flex items-center justify-center">
+                {turnosFiltrados.length} turnos
+              </div>
+
             </div>
 
           </div>
