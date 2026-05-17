@@ -179,7 +179,7 @@ export default function PanelPage() {
                 <div>
 
                   <h1 className="text-2xl font-bold">
-                    Med Turnos
+                    Turnos
                   </h1>
 
                   <p className="text-slate-300 text-sm">
