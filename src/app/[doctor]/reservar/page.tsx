@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 
 export default function ReservarTurno() {
+
   const params = useParams();
   const doctor = params.doctor as string;
 
@@ -17,74 +18,148 @@ export default function ReservarTurno() {
 
   const [horarios, setHorarios] = useState<string[]>([]);
   const [ocupados, setOcupados] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
+  // 🔥 GENERAR HORARIOS
   const generarHorarios = () => {
+
     const lista = [];
 
     for (let h = 9; h <= 18; h++) {
+
       lista.push(`${h}:00`);
-      lista.push(`${h}:30`);
+
+      if (h !== 18) {
+        lista.push(`${h}:30`);
+      }
+
     }
 
     return lista;
+
   };
 
+  // 🔥 CUANDO CAMBIA FECHA
   const handleFechaChange = async (fecha: string) => {
-    setForm({ ...form, fecha, hora: "" });
+
+    setForm({
+      ...form,
+      fecha,
+      hora: "",
+    });
 
     const lista = generarHorarios();
+
     setHorarios(lista);
 
     try {
-      const res = await fetch(`/api/turnos?doctor=${doctor}&fecha=${fecha}`);
+
+      const res = await fetch(
+        `/api/turnos?doctor=${doctor}&fecha=${fecha}`
+      );
+
       const data = await res.json();
 
-      setOcupados(data.map((t: any) => t.hora));
+      setOcupados(
+        data.map((t: any) => t.hora)
+      );
 
     } catch {
+
       setOcupados([]);
+
     }
+
   };
 
- const handleSubmit = async (e: any) => {
+  // 🔥 RESERVAR
+  const handleSubmit = async (e: any) => {
 
-  e.preventDefault();
+    e.preventDefault();
 
-  localStorage.setItem(
-    "turno",
-    JSON.stringify({
-      ...form,
-      doctor,
-    })
-  );
+    setLoading(true);
 
-  // 🔥 DEMO SIN PAGO REAL
-  window.location.href = "/exito";
+    try {
 
+      // 🔥 VERIFICAR SI EL HORARIO SIGUE LIBRE
+      const verificar = await fetch(
+        `/api/turnos?doctor=${doctor}&fecha=${form.fecha}`
+      );
 
+      const existentes = await verificar.json();
 
-  const res = await fetch("/api/pago", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      ...form,
-      doctor,
-    }),
-  });
+      const ocupado = existentes.some(
+        (t: any) => t.hora === form.hora
+      );
 
-  const data = await res.json();
+      // 🔥 SI YA ESTÁ OCUPADO
+      if (ocupado) {
 
-  if (data.url) {
-    window.location.href = data.url;
-  } else {
-    alert("Error al generar el pago");
-  }
-  
+        alert(
+          "Ese horario ya fue reservado. Elegí otro."
+        );
 
-};
+        // 🔥 RECARGAR HORARIOS OCUPADOS
+        setOcupados(
+          existentes.map((t: any) => t.hora)
+        );
+
+        setLoading(false);
+
+        return;
+
+      }
+
+      // 🔥 GUARDAR TURNO
+      localStorage.setItem(
+        "turno",
+        JSON.stringify({
+          ...form,
+          doctor,
+        })
+      );
+
+      // 🔥 DEMO SIN PAGO REAL
+      window.location.href = "/exito";
+
+      /*
+      // 🔥 PAGO REAL
+      const res = await fetch("/api/pago", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...form,
+          doctor,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.url) {
+
+        window.location.href = data.url;
+
+      } else {
+
+        alert("Error al generar el pago");
+
+      }
+      */
+
+    } catch {
+
+      alert("Ocurrió un error");
+
+    }
+
+    setLoading(false);
+
+  };
+
   return (
+
     <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-10">
 
       <div className="w-full max-w-2xl bg-white rounded-[28px] border border-slate-200 shadow-lg p-6 md:p-8">
@@ -100,15 +175,29 @@ export default function ReservarTurno() {
             Reserva tu turno
           </h1>
 
-    
+          <p className="text-slate-500 mt-3">
+            Seleccioná una fecha y horario disponible
+          </p>
+
         </div>
 
         {/* FORM */}
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-4"
+        >
 
+          {/* NOMBRE */}
           <input
             type="text"
             placeholder="Nombre completo"
+            required
+            onChange={(e) =>
+              setForm({
+                ...form,
+                nombre: e.target.value,
+              })
+            }
             className="
               w-full
               min-h-[56px]
@@ -116,20 +205,27 @@ export default function ReservarTurno() {
               border-slate-300
               rounded-2xl
               px-4
-              text-slate-800
+              text-slate-900
+              placeholder:text-slate-400
               outline-none
               transition
               focus:border-emerald-600
               focus:ring-2
               focus:ring-emerald-200
             "
-            required
-            onChange={(e) => setForm({ ...form, nombre: e.target.value })}
           />
 
+          {/* TELÉFONO */}
           <input
             type="text"
             placeholder="Teléfono"
+            required
+            onChange={(e) =>
+              setForm({
+                ...form,
+                telefono: e.target.value,
+              })
+            }
             className="
               w-full
               min-h-[56px]
@@ -137,20 +233,27 @@ export default function ReservarTurno() {
               border-slate-300
               rounded-2xl
               px-4
-              text-slate-800
+              text-slate-900
+              placeholder:text-slate-400
               outline-none
               transition
               focus:border-emerald-600
               focus:ring-2
               focus:ring-emerald-200
             "
-            required
-            onChange={(e) => setForm({ ...form, telefono: e.target.value })}
           />
 
+          {/* EMAIL */}
           <input
             type="email"
             placeholder="Email"
+            required
+            onChange={(e) =>
+              setForm({
+                ...form,
+                email: e.target.value,
+              })
+            }
             className="
               w-full
               min-h-[56px]
@@ -158,15 +261,14 @@ export default function ReservarTurno() {
               border-slate-300
               rounded-2xl
               px-4
-              text-slate-800
+              text-slate-900
+              placeholder:text-slate-400
               outline-none
               transition
               focus:border-emerald-600
               focus:ring-2
               focus:ring-emerald-200
             "
-            required
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
           />
 
           {/* FECHA */}
@@ -178,6 +280,10 @@ export default function ReservarTurno() {
 
             <input
               type="date"
+              required
+              onChange={(e) =>
+                handleFechaChange(e.target.value)
+              }
               className="
                 w-full
                 min-h-[56px]
@@ -185,21 +291,20 @@ export default function ReservarTurno() {
                 border-slate-300
                 rounded-2xl
                 px-4
-                text-slate-800
+                text-slate-900
                 outline-none
                 transition
                 focus:border-emerald-600
                 focus:ring-2
                 focus:ring-emerald-200
               "
-              required
-              onChange={(e) => handleFechaChange(e.target.value)}
             />
 
           </div>
 
           {/* HORARIOS */}
           {form.fecha && (
+
             <div className="mt-2">
 
               <h3 className="font-semibold text-slate-800 mb-4">
@@ -213,11 +318,17 @@ export default function ReservarTurno() {
                   const ocupado = ocupados.includes(h);
 
                   return (
+
                     <button
                       type="button"
                       key={h}
                       disabled={ocupado}
-                      onClick={() => setForm({ ...form, hora: h })}
+                      onClick={() =>
+                        setForm({
+                          ...form,
+                          hora: h,
+                        })
+                      }
                       className={`
                         min-h-[52px]
                         rounded-2xl
@@ -237,41 +348,51 @@ export default function ReservarTurno() {
                     >
                       {h}
                     </button>
+
                   );
+
                 })}
 
               </div>
 
             </div>
+
           )}
-<div className="mt-6 bg-emerald-50 border border-emerald-200 rounded-2xl p-4">
 
-  <p className="text-slate-800 font-semibold mb-2">
-    Información de pago
-  </p>
+          {/* INFO PAGO */}
+          <div className="mt-6 bg-emerald-50 border border-emerald-200 rounded-2xl p-4">
 
-  <div className="space-y-1 text-sm text-slate-600">
+            <p className="text-slate-800 font-semibold mb-2">
+              Información de pago
+            </p>
 
-    <p>
-      Valor de la consulta:
-      <strong className="text-slate-800"> $20.000</strong>
-    </p>
+            <div className="space-y-1 text-sm text-slate-600">
 
-    <p>
-      Seña online:
-      <strong className="text-emerald-700"> $5.000</strong>
-    </p>
+              <p>
+                Valor de la consulta:
+                <strong className="text-slate-800">
+                  {" "} $20.000
+                </strong>
+              </p>
 
-    <p>
-      El saldo restante se abona el día del turno.
-    </p>
+              <p>
+                Seña online:
+                <strong className="text-emerald-700">
+                  {" "} $5.000
+                </strong>
+              </p>
 
-  </div>
+              <p>
+                El saldo restante se abona el día del turno.
+              </p>
 
-</div>
+            </div>
+
+          </div>
+
           {/* BOTÓN */}
           <button
-            disabled={!form.hora}
+            disabled={!form.hora || loading}
             className="
               mt-6
               min-h-[58px]
@@ -288,7 +409,9 @@ export default function ReservarTurno() {
               disabled:cursor-not-allowed
             "
           >
-            Confirmar y pagar seña
+            {loading
+              ? "Procesando..."
+              : "Confirmar turno"}
           </button>
 
         </form>
@@ -296,5 +419,7 @@ export default function ReservarTurno() {
       </div>
 
     </div>
+
   );
+
 }
