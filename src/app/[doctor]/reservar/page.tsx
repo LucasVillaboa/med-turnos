@@ -119,7 +119,7 @@ export default function ReservarTurno() {
       );
 
       // 🔥 GUARDAR EN SUPABASE
-      await fetch("/api/guardar-turno", {
+      await fetch("/api/confirmar", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
