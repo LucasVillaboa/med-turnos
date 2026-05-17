@@ -36,7 +36,6 @@ export default function LoginPage() {
 
       localStorage.setItem("auth", "true");
 
-      // 🔥 GUARDAR DOCTOR
       localStorage.setItem(
         "doctor",
         user.doctor
@@ -52,13 +51,13 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-slate-100 flex items-center justify-center px-4">
 
-      <div className="w-full max-w-md bg-white border border-slate-200 rounded-3xl shadow-lg p-8">
+      <div className="w-full max-w-md bg-white border border-slate-200 rounded-[32px] shadow-xl p-8">
 
         <div className="text-center mb-8">
 
-          <div className="w-20 h-20 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-5 text-4xl">
+          <div className="w-24 h-24 rounded-3xl bg-emerald-100 flex items-center justify-center mx-auto mb-5 text-5xl shadow-sm">
             🩺
           </div>
 
@@ -66,69 +65,99 @@ export default function LoginPage() {
             Panel profesional
           </h1>
 
-          <p className="text-slate-500 mt-2">
-            Ingresá para administrar los turnos
+          <p className="text-slate-500 mt-2 text-sm">
+            Administrá turnos y pacientes desde cualquier dispositivo
           </p>
 
         </div>
 
         <form
           onSubmit={handleLogin}
-          className="flex flex-col gap-4"
+          className="flex flex-col gap-5"
         >
 
-          <input
-            type="text"
-            placeholder="Usuario"
-            value={usuario}
-            onChange={(e) => setUsuario(e.target.value)}
-            className="
-              w-full
-              min-h-[56px]
-              border
-              border-slate-300
-              rounded-2xl
-              px-4
-              outline-none
-              focus:border-emerald-600
-              focus:ring-2
-              focus:ring-emerald-200
-            "
-          />
+          <div>
 
-          <input
-            type="password"
-            placeholder="Contraseña"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="
-              w-full
-              min-h-[56px]
-              border
-              border-slate-300
-              rounded-2xl
-              px-4
-              outline-none
-              focus:border-emerald-600
-              focus:ring-2
-              focus:ring-emerald-200
-            "
-          />
+            <label className="block text-sm font-semibold text-slate-700 mb-2">
+              Usuario
+            </label>
+
+            <input
+              type="text"
+              placeholder="Ingresar usuario"
+              value={usuario}
+              onChange={(e) => setUsuario(e.target.value)}
+              className="
+                w-full
+                min-h-[58px]
+                bg-white
+                text-slate-900
+                placeholder:text-slate-400
+                border
+                border-slate-300
+                rounded-2xl
+                px-5
+                text-base
+                outline-none
+                shadow-sm
+                focus:border-emerald-500
+                focus:ring-4
+                focus:ring-emerald-100
+                transition
+              "
+            />
+
+          </div>
+
+          <div>
+
+            <label className="block text-sm font-semibold text-slate-700 mb-2">
+              Contraseña
+            </label>
+
+            <input
+              type="password"
+              placeholder="Ingresar contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="
+                w-full
+                min-h-[58px]
+                bg-white
+                text-slate-900
+                placeholder:text-slate-400
+                border
+                border-slate-300
+                rounded-2xl
+                px-5
+                text-base
+                outline-none
+                shadow-sm
+                focus:border-emerald-500
+                focus:ring-4
+                focus:ring-emerald-100
+                transition
+              "
+            />
+
+          </div>
 
           <button
             className="
-              mt-4
-              min-h-[56px]
+              mt-2
+              min-h-[58px]
               bg-emerald-600
               hover:bg-emerald-700
+              active:scale-[0.99]
               transition
               text-white
               rounded-2xl
               font-semibold
               text-lg
+              shadow-lg
             "
           >
-            Ingresar
+            Ingresar al panel
           </button>
 
         </form>
