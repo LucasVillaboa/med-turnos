@@ -12,22 +12,28 @@ export default async function DoctorPage({ params }: Props) {
   const doctors: Record<string, string> = {
     sandoval: "Dr. Juan Sandoval",
     lopez: "Dra. María López",
+
+    // 🔥 DEMO
+    demo: "Consultorio Demo",
   };
 
   // 🔥 ESPECIALIDADES
   const specialties: Record<string, string> = {
     sandoval: "Especialista en Urología",
     lopez: "Especialista en Cardiología",
+
+    // 🔥 DEMO
+    demo: "Sistema de turnos online",
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white flex items-center justify-center px-4">
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
 
-      <div className="w-full max-w-2xl bg-white rounded-3xl shadow-xl border border-green-100 p-10 text-center">
+      <div className="w-full max-w-2xl bg-white rounded-3xl shadow-xl border border-slate-200 p-10 text-center">
 
-        {/* FOTO / INICIAL */}
-        <div className="w-28 h-28 bg-green-100 rounded-full mx-auto mb-6 flex items-center justify-center text-4xl font-bold text-green-700">
-          {doctor.charAt(0).toUpperCase()}
+        {/* FOTO / ICONO */}
+        <div className="w-28 h-28 bg-emerald-100 rounded-full mx-auto mb-6 flex items-center justify-center text-5xl">
+          🩺
         </div>
 
         {/* NOMBRE */}
@@ -36,13 +42,13 @@ export default async function DoctorPage({ params }: Props) {
         </h1>
 
         {/* ESPECIALIDAD */}
-        <p className="text-green-700 font-medium mb-6">
+        <p className="text-emerald-700 font-medium mb-6">
           {specialties[doctor] || "Especialista"}
         </p>
 
         {/* DESCRIPCIÓN */}
-        <p className="text-slate-500 mb-8 leading-relaxed">
-          Reservá tu turno online de forma rápida y segura.
+        <p className="text-slate-500 mb-8 leading-relaxed max-w-lg mx-auto">
+          Reservá turnos online de forma rápida, moderna y segura.
           Elegí fecha y horario disponible desde cualquier dispositivo.
         </p>
 
@@ -51,8 +57,8 @@ export default async function DoctorPage({ params }: Props) {
           href={`/${doctor}/reservar`}
           className="
             inline-block
-            bg-green-600
-            hover:bg-green-700
+            bg-emerald-600
+            hover:bg-emerald-700
             transition
             text-white
             px-8
@@ -67,6 +73,7 @@ export default async function DoctorPage({ params }: Props) {
         </Link>
 
       </div>
+
     </div>
   );
 }
