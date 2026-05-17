@@ -46,37 +46,44 @@ export default function ReservarTurno() {
     }
   };
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
+ const handleSubmit = async (e: any) => {
 
-    localStorage.setItem(
-      "turno",
-      JSON.stringify({
-        ...form,
-        doctor,
-      })
-    );
+  e.preventDefault();
 
-    const res = await fetch("/api/pago", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...form,
-        doctor,
-      }),
-    });
+  localStorage.setItem(
+    "turno",
+    JSON.stringify({
+      ...form,
+      doctor,
+    })
+  );
 
-    const data = await res.json();
+  // 🔥 DEMO SIN PAGO REAL
+  window.location.href = "/exito";
 
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      alert("Error al generar el pago");
-    }
-  };
 
+
+  const res = await fetch("/api/pago", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      ...form,
+      doctor,
+    }),
+  });
+
+  const data = await res.json();
+
+  if (data.url) {
+    window.location.href = data.url;
+  } else {
+    alert("Error al generar el pago");
+  }
+  
+
+};
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-10">
 
