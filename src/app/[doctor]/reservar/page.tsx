@@ -39,7 +39,7 @@ export default function ReservarTurno() {
 
   };
 
-  // 🔥 CUANDO CAMBIA FECHA
+  // 🔥 CAMBIO DE FECHA
   const handleFechaChange = async (fecha: string) => {
 
     setForm({
@@ -81,7 +81,7 @@ export default function ReservarTurno() {
 
     try {
 
-      // 🔥 VERIFICAR SI EL HORARIO SIGUE LIBRE
+      // 🔥 VERIFICAR SI SIGUE LIBRE
       const verificar = await fetch(
         `/api/turnos?doctor=${doctor}&fecha=${form.fecha}`
       );
@@ -92,14 +92,13 @@ export default function ReservarTurno() {
         (t: any) => t.hora === form.hora
       );
 
-      // 🔥 SI YA ESTÁ OCUPADO
+      // 🔥 YA OCUPADO
       if (ocupado) {
 
         alert(
           "Ese horario ya fue reservado. Elegí otro."
         );
 
-        // 🔥 RECARGAR HORARIOS OCUPADOS
         setOcupados(
           existentes.map((t: any) => t.hora)
         );
@@ -110,7 +109,7 @@ export default function ReservarTurno() {
 
       }
 
-      // 🔥 GUARDAR TURNO
+      // 🔥 GUARDAR LOCAL
       localStorage.setItem(
         "turno",
         JSON.stringify({
@@ -118,6 +117,18 @@ export default function ReservarTurno() {
           doctor,
         })
       );
+
+      // 🔥 GUARDAR EN SUPABASE
+      await fetch("/api/guardar-turno", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...form,
+          doctor,
+        }),
+      });
 
       // 🔥 DEMO SIN PAGO REAL
       window.location.href = "/exito";
@@ -359,7 +370,7 @@ export default function ReservarTurno() {
 
           )}
 
-          {/* INFO PAGO */}
+          {/* INFO */}
           <div className="mt-6 bg-emerald-50 border border-emerald-200 rounded-2xl p-4">
 
             <p className="text-slate-800 font-semibold mb-2">
