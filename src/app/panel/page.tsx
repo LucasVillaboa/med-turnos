@@ -223,9 +223,7 @@ export default function PanelPage() {
 
           <div>
 
-            <h1 className="text-4xl font-bold text-slate-800">
-              Dashboard
-            </h1>
+          
 
             <p className="text-slate-500 mt-2">
               Gestión inteligente de turnos y pacientes
@@ -259,7 +257,7 @@ export default function PanelPage() {
 
         </div>
 
-        {/* CARDS */}
+                {/* CARDS */}
         <div className="grid md:grid-cols-3 gap-6">
 
           <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
@@ -336,8 +334,200 @@ export default function PanelPage() {
 
         </div>
 
+        {/* TABLA */}
+        <div className="mt-8 bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+
+          {/* HEADER */}
+          <div className="p-6 border-b border-slate-200 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
+            <div>
+
+              <h2 className="text-2xl font-bold text-slate-800">
+                Próximos turnos
+              </h2>
+
+              <p className="text-slate-500 text-sm mt-1">
+                Administración de pacientes registrados
+              </p>
+
+            </div>
+
+            <div className="bg-emerald-100 text-emerald-700 px-4 py-2 rounded-2xl text-sm font-semibold">
+              {turnosFiltrados.length} turnos encontrados
+            </div>
+
+          </div>
+
+          {loading ? (
+
+            <div className="p-10 text-center text-slate-500">
+              Cargando turnos...
+            </div>
+
+          ) : turnosFiltrados.length === 0 ? (
+
+            <div className="p-12 text-center">
+
+              <div className="text-6xl mb-4">
+                📭
+              </div>
+
+              <h3 className="text-2xl font-bold text-slate-700 mb-2">
+                No hay turnos
+              </h3>
+
+              <p className="text-slate-500">
+                Los nuevos pacientes aparecerán automáticamente.
+              </p>
+
+            </div>
+
+          ) : (
+
+            <div className="overflow-x-auto">
+
+              <table className="w-full min-w-[950px]">
+
+                <thead className="bg-slate-100 text-slate-600 text-sm">
+
+                  <tr>
+
+                    <th className="text-left p-5">
+                      Paciente
+                    </th>
+
+                    <th className="text-left p-5">
+                      Fecha
+                    </th>
+
+                    <th className="text-left p-5">
+                      Hora
+                    </th>
+
+                    <th className="text-left p-5">
+                      Teléfono
+                    </th>
+
+                    <th className="text-left p-5">
+                      Email
+                    </th>
+
+                    <th className="text-left p-5">
+                      Estado
+                    </th>
+
+                    <th className="text-left p-5">
+                      Acciones
+                    </th>
+
+                  </tr>
+
+                </thead>
+
+                <tbody>
+
+                  {turnosFiltrados.map((turno) => (
+
+                    <tr
+                      key={turno.id}
+                      className="border-t border-slate-100 hover:bg-slate-50 transition"
+                    >
+
+                      <td className="p-5">
+
+                        <div className="flex items-center gap-4">
+
+                          <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center font-bold text-emerald-700">
+                            {turno.nombre?.charAt(0)?.toUpperCase()}
+                          </div>
+
+                          <div>
+
+                            <p className="font-semibold text-slate-800">
+                              {turno.nombre}
+                            </p>
+
+                            <p className="text-sm text-slate-500">
+                              Paciente registrado
+                            </p>
+
+                          </div>
+
+                        </div>
+
+                      </td>
+
+                      <td className="p-5 text-slate-600">
+                        {turno.fecha}
+                      </td>
+
+                      <td className="p-5 text-slate-600">
+                        {turno.hora}
+                      </td>
+
+                      <td className="p-5 text-slate-600">
+                        {turno.telefono}
+                      </td>
+
+                      <td className="p-5 text-slate-600">
+                        {turno.email}
+                      </td>
+
+                      <td className="p-5">
+
+                        <span className="
+                          bg-emerald-100
+                          text-emerald-700
+                          px-4
+                          py-2
+                          rounded-2xl
+                          text-sm
+                          font-semibold
+                        ">
+                          Confirmado
+                        </span>
+
+                      </td>
+
+                      <td className="p-5">
+
+                        <button
+                          onClick={() => eliminarTurno(turno.id)}
+                          className="
+                            bg-red-100
+                            hover:bg-red-200
+                            text-red-600
+                            px-4
+                            py-2
+                            rounded-2xl
+                            text-sm
+                            font-medium
+                            transition
+                          "
+                        >
+                          Eliminar
+                        </button>
+
+                      </td>
+
+                    </tr>
+
+                  ))}
+
+                </tbody>
+
+              </table>
+
+            </div>
+
+          )}
+
+        </div>
+
       </main>
 
     </div>
   );
 }
+        
+  
