@@ -39,7 +39,7 @@ export default function ReservarTurno() {
 
   };
 
-  // 🔥 CAMBIO DE FECHA
+  // 🔥 OBTENER HORARIOS OCUPADOS
   const handleFechaChange = async (fecha: string) => {
 
     setForm({
@@ -72,7 +72,7 @@ export default function ReservarTurno() {
 
   };
 
-  // 🔥 RESERVAR
+  // 🔥 RESERVAR TURNO
   const handleSubmit = async (e: any) => {
 
     e.preventDefault();
@@ -81,27 +81,40 @@ export default function ReservarTurno() {
 
     try {
 
-      // 🔥 VERIFICAR SI SIGUE LIBRE
-      const verificar = await fetch(
-        `/api/turnos?doctor=${doctor}&fecha=${form.fecha}`
-      );
+      const res = await fetch("/api/confirmar", {
 
-      const existentes = await verificar.json();
+        method: "POST",
 
-      const ocupado = existentes.some(
-        (t: any) => t.hora === form.hora
-      );
+        headers: {
+          "Content-Type": "application/json",
+        },
 
-      // 🔥 YA OCUPADO
-      if (ocupado) {
+        body: JSON.stringify({
+          ...form,
+          doctor,
+        }),
 
-        alert(
-          "Ese horario ya fue reservado. Elegí otro."
-        );
+      });
 
-        setOcupados(
-          existentes.map((t: any) => t.hora)
-        );
+      const data = await res.json();
+
+      // 🔥 SI EL HORARIO YA ESTÁ OCUPADO
+      if (!res.ok) {
+
+        if (data.error === "Horario ocupado") {
+
+          alert(
+            "Ese horario ya fue reservado. Elegí otro."
+          );
+
+          // 🔥 RECARGAR HORARIOS
+          handleFechaChange(form.fecha);
+
+        } else {
+
+          alert("Ocurrió un error");
+
+        }
 
         setLoading(false);
 
@@ -109,48 +122,31 @@ export default function ReservarTurno() {
 
       }
 
-      // 🔥 GUARDAR LOCAL
-      localStorage.setItem(
-        "turno",
-        JSON.stringify({
-          ...form,
-          doctor,
-        })
-      );
-
-      // 🔥 GUARDAR EN SUPABASE
-      await fetch("/api/confirmar", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...form,
-          doctor,
-        }),
-      });
-
       // 🔥 DEMO SIN PAGO REAL
       window.location.href = "/exito";
 
       /*
       // 🔥 PAGO REAL
-      const res = await fetch("/api/pago", {
+      const pago = await fetch("/api/pago", {
+
         method: "POST",
+
         headers: {
           "Content-Type": "application/json",
         },
+
         body: JSON.stringify({
           ...form,
           doctor,
         }),
+
       });
 
-      const data = await res.json();
+      const pagoData = await pago.json();
 
-      if (data.url) {
+      if (pagoData.url) {
 
-        window.location.href = data.url;
+        window.location.href = pagoData.url;
 
       } else {
 
@@ -350,14 +346,14 @@ export default function ReservarTurno() {
 
                         ${
                           ocupado
-                            ? "bg-slate-200 text-slate-400 border-slate-200 cursor-not-allowed"
+                            ? "bg-red-100 text-red-500 border-red-200 cursor-not-allowed"
                             : form.hora === h
                             ? "bg-emerald-600 text-white border-emerald-600 shadow-md scale-105"
                             : "bg-white text-slate-700 border-slate-300 hover:bg-emerald-50 hover:border-emerald-300"
                         }
                       `}
                     >
-                      {h}
+                      {ocupado ? `${h} ✕` : h}
                     </button>
 
                   );
@@ -370,7 +366,7 @@ export default function ReservarTurno() {
 
           )}
 
-          {/* INFO */}
+          {/* INFO PAGO */}
           <div className="mt-6 bg-emerald-50 border border-emerald-200 rounded-2xl p-4">
 
             <p className="text-slate-800 font-semibold mb-2">

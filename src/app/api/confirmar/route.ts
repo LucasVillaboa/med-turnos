@@ -15,43 +15,131 @@ export async function POST(req: Request) {
 
     const data = await req.json();
 
+    // 🔥 VERIFICAR SI YA EXISTE EL TURNO
+    const { data: existente } = await supabase
+      .from("turnos")
+      .select("*")
+      .eq("doctor", data.doctor)
+      .eq("fecha", data.fecha)
+      .eq("hora", data.hora)
+      .single();
+
+    // 🔥 SI YA EXISTE
+    if (existente) {
+
+      return NextResponse.json(
+        {
+          error: "Horario ocupado",
+        },
+        {
+          status: 400,
+        }
+      );
+
+    }
+
     // 🔥 GUARDAR TURNO
     const { error } = await supabase
       .from("turnos")
       .insert([data]);
 
     if (error) {
+
       return NextResponse.json(
-        { error: error.message },
-        { status: 500 }
+        {
+          error: error.message,
+        },
+        {
+          status: 500,
+        }
       );
+
     }
 
-    // 🔥 ENVIAR EMAIL
+    // 🔥 EMAIL
     await resend.emails.send({
-      from: "Turnos <onboarding@resend.dev>",
+
+      from: "Turnos Médicos <onboarding@resend.dev>",
       to: data.email,
-      subject: "Turno confirmado",
+      subject: "Turno confirmado ✅",
+
       html: `
-        <h2>Tu turno fue confirmado ✅</h2>
+        <div style="
+          font-family: Arial, sans-serif;
+          padding: 20px;
+          color: #1e293b;
+          background: #f8fafc;
+        ">
 
-        <p><strong>Médico:</strong> ${data.doctor}</p>
-        <p><strong>Fecha:</strong> ${data.fecha}</p>
-        <p><strong>Hora:</strong> ${data.hora}</p>
+          <div style="
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid #dcfce7;
+          ">
 
-        <br/>
+            <h2 style="
+              color: #16a34a;
+              margin-bottom: 20px;
+            ">
+              Turno confirmado ✅
+            </h2>
 
-        <p>Gracias por reservar tu turno.</p>
+            <p style="margin-bottom: 20px;">
+              Hola <strong>${data.nombre}</strong>,
+              tu reserva fue confirmada correctamente.
+            </p>
+
+            <div style="
+              background: #f8fafc;
+              padding: 16px;
+              border-radius: 12px;
+              margin-bottom: 24px;
+            ">
+
+              <p>
+                <strong>Fecha:</strong>
+                ${data.fecha}
+              </p>
+
+              <p>
+                <strong>Horario:</strong>
+                ${data.hora}
+              </p>
+
+            </div>
+
+            <p style="margin-bottom: 10px;">
+              Gracias por reservar tu turno online.
+            </p>
+
+            <p>
+              Te esperamos.
+            </p>
+
+          </div>
+
+        </div>
       `,
     });
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({
+      ok: true,
+    });
 
   } catch (err) {
 
     return NextResponse.json(
-      { error: "Error interno" },
-      { status: 500 }
+      {
+        error: "Error interno",
+      },
+      {
+        status: 500,
+      }
     );
+
   }
+
 }
