@@ -16,16 +16,15 @@ export async function POST(req: Request) {
     const data = await req.json();
 
     // 🔥 VERIFICAR SI YA EXISTE EL TURNO
-    const { data: existente } = await supabase
-      .from("turnos")
-      .select("*")
-      .eq("doctor", data.doctor)
-      .eq("fecha", data.fecha)
-      .eq("hora", data.hora)
-      .single();
+   const { data: existente } = await supabase
+  .from("turnos")
+  .select("id")
+  .eq("doctor", data.doctor)
+  .eq("fecha", data.fecha)
+  .eq("hora", data.hora);
 
     // 🔥 SI YA EXISTE
-    if (existente) {
+    if (existente && existente.length > 0) {
 
       return NextResponse.json(
         {
