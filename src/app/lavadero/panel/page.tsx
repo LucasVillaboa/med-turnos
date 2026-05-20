@@ -52,6 +52,49 @@ export default function LavaderoPanelPage() {
 
   };
 
+  // 🔥 ELIMINAR RESERVA
+  const eliminarReserva = async (id: number) => {
+
+    const confirmar = confirm(
+      "¿Seguro que querés eliminar esta reserva?"
+    );
+
+    if (!confirmar) return;
+
+    try {
+
+      const res = await fetch("/api/eliminar-turno", {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({ id }),
+
+      });
+
+      if (!res.ok) {
+
+        alert("Error al eliminar");
+
+        return;
+
+      }
+
+      setTurnos(
+        turnos.filter((t) => t.id !== id)
+      );
+
+    } catch {
+
+      alert("Error al eliminar");
+
+    }
+
+  };
+
   const cerrarSesion = () => {
 
     localStorage.removeItem("auth");
@@ -221,6 +264,10 @@ export default function LavaderoPanelPage() {
                       Hora
                     </th>
 
+                    <th className="text-left px-6 py-4 text-yellow-400">
+                      Acción
+                    </th>
+
                   </tr>
 
                 </thead>
@@ -248,6 +295,29 @@ export default function LavaderoPanelPage() {
 
                       <td className="px-6 py-4">
                         {turno.hora}
+                      </td>
+
+                      <td className="px-6 py-4">
+
+                        <button
+                          onClick={() =>
+                            eliminarReserva(turno.id)
+                          }
+                          className="
+                            bg-red-500
+                            hover:bg-red-600
+                            text-white
+                            px-4
+                            py-2
+                            rounded-xl
+                            text-sm
+                            font-semibold
+                            transition
+                          "
+                        >
+                          Eliminar
+                        </button>
+
                       </td>
 
                     </tr>
