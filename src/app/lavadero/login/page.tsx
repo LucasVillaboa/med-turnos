@@ -37,7 +37,7 @@ export default function LavaderoLoginPage() {
         user.doctor
       );
 
-      router.push("/lavadero/panel");
+      router.push("/panel");
 
     } else {
 
