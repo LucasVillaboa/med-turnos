@@ -13,14 +13,24 @@ export async function GET(req: Request) {
   const doctor = searchParams.get("doctor");
   const fecha = searchParams.get("fecha");
 
-  const { data, error } = await supabase
+  let query = supabase
     .from("turnos")
     .select("*")
-    .eq("doctor", doctor)
-    .eq("fecha", fecha);
+    .eq("doctor", doctor);
+
+  // 🔥 SOLO FILTRAR POR FECHA SI EXISTE
+  if (fecha) {
+
+    query = query.eq("fecha", fecha);
+
+  }
+
+  const { data, error } = await query;
 
   if (error) {
+
     return NextResponse.json([]);
+
   }
 
   return NextResponse.json(data);
