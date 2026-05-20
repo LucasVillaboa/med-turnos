@@ -11,7 +11,7 @@ export default async function DoctorPage({ params }: Props) {
   const esLavadero = doctor === "lavadero";
 
   const doctors: Record<string, string> = {
-    lavadero: "Luxury Car Wash",
+    lavadero: "Foxtro",
     lopez: "Dra. María López",
     demo: "Consultorio Demo",
   };
