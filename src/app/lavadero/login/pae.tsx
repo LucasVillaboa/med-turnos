@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function LoginPage() {
+export default function LavaderoLoginPage() {
 
   const router = useRouter();
 
@@ -16,9 +16,9 @@ export default function LoginPage() {
 
     const users: any = {
 
-      consultorio: {
-        password: "consultorio2026",
-        doctor: "demo",
+      lavadero: {
+        password: "lavadero2026",
+        doctor: "lavadero",
       },
 
     };
@@ -37,7 +37,7 @@ export default function LoginPage() {
         user.doctor
       );
 
-      router.push("/panel");
+      router.push("/lavadero/panel");
 
     } else {
 
@@ -49,22 +49,34 @@ export default function LoginPage() {
 
   return (
 
-    <div className="min-h-screen bg-slate-100 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-black flex items-center justify-center px-4">
 
-      <div className="w-full max-w-md bg-white border border-slate-200 rounded-[32px] shadow-xl p-8">
+      <div className="w-full max-w-md bg-zinc-950 border border-yellow-500/30 rounded-[32px] shadow-2xl p-8">
 
         <div className="text-center mb-8">
 
-          <div className="w-24 h-24 rounded-3xl bg-emerald-100 flex items-center justify-center mx-auto mb-5 text-5xl shadow-sm">
-            🩺
-          </div>
+          <img
+            src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1200&auto=format&fit=crop"
+            alt="Auto"
+            className="
+              w-28
+              h-28
+              object-cover
+              rounded-3xl
+              mx-auto
+              mb-5
+              border-2
+              border-yellow-500
+              shadow-lg
+            "
+          />
 
-          <h1 className="text-3xl font-bold text-slate-800">
-            Panel profesional
+          <h1 className="text-3xl font-bold text-yellow-400">
+            Panel Lavadero
           </h1>
 
-          <p className="text-slate-500 mt-2 text-sm">
-            Administrá turnos y pacientes desde cualquier dispositivo
+          <p className="text-zinc-400 mt-2 text-sm">
+            Administrá reservas y clientes
           </p>
 
         </div>
@@ -76,7 +88,7 @@ export default function LoginPage() {
 
           <div>
 
-            <label className="block text-sm font-semibold text-slate-700 mb-2">
+            <label className="block text-sm font-semibold text-yellow-400 mb-2">
               Usuario
             </label>
 
@@ -88,19 +100,18 @@ export default function LoginPage() {
               className="
                 w-full
                 min-h-[58px]
-                bg-white
-                text-slate-900
-                placeholder:text-slate-400
+                bg-zinc-900
+                text-white
+                placeholder:text-zinc-500
                 border
-                border-slate-300
+                border-zinc-700
                 rounded-2xl
                 px-5
                 text-base
                 outline-none
-                shadow-sm
-                focus:border-emerald-500
+                focus:border-yellow-500
                 focus:ring-4
-                focus:ring-emerald-100
+                focus:ring-yellow-500/20
                 transition
               "
             />
@@ -109,7 +120,7 @@ export default function LoginPage() {
 
           <div>
 
-            <label className="block text-sm font-semibold text-slate-700 mb-2">
+            <label className="block text-sm font-semibold text-yellow-400 mb-2">
               Contraseña
             </label>
 
@@ -121,19 +132,18 @@ export default function LoginPage() {
               className="
                 w-full
                 min-h-[58px]
-                bg-white
-                text-slate-900
-                placeholder:text-slate-400
+                bg-zinc-900
+                text-white
+                placeholder:text-zinc-500
                 border
-                border-slate-300
+                border-zinc-700
                 rounded-2xl
                 px-5
                 text-base
                 outline-none
-                shadow-sm
-                focus:border-emerald-500
+                focus:border-yellow-500
                 focus:ring-4
-                focus:ring-emerald-100
+                focus:ring-yellow-500/20
                 transition
               "
             />
@@ -144,13 +154,12 @@ export default function LoginPage() {
             className="
               mt-2
               min-h-[58px]
-              bg-emerald-600
-              hover:bg-emerald-700
-              active:scale-[0.99]
+              bg-yellow-500
+              hover:bg-yellow-400
               transition
-              text-white
+              text-black
               rounded-2xl
-              font-semibold
+              font-bold
               text-lg
               shadow-lg
             "
