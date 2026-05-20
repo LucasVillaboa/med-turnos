@@ -8,6 +8,8 @@ export default function ReservarTurno() {
   const params = useParams();
   const doctor = params.doctor as string;
 
+  const esLavadero = doctor === "lavadero";
+
   const [form, setForm] = useState({
     nombre: "",
     telefono: "",
@@ -20,7 +22,6 @@ export default function ReservarTurno() {
   const [ocupados, setOcupados] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // 🔥 GENERAR HORARIOS
   const generarHorarios = () => {
 
     const lista = [];
@@ -39,7 +40,6 @@ export default function ReservarTurno() {
 
   };
 
-  // 🔥 OBTENER HORARIOS OCUPADOS
   const handleFechaChange = async (fecha: string) => {
 
     setForm({
@@ -48,9 +48,7 @@ export default function ReservarTurno() {
       hora: "",
     });
 
-    const lista = generarHorarios();
-
-    setHorarios(lista);
+    setHorarios(generarHorarios());
 
     try {
 
@@ -72,7 +70,6 @@ export default function ReservarTurno() {
 
   };
 
-  // 🔥 RESERVAR TURNO
   const handleSubmit = async (e: any) => {
 
     e.preventDefault();
@@ -98,16 +95,12 @@ export default function ReservarTurno() {
 
       const data = await res.json();
 
-      // 🔥 SI EL HORARIO YA ESTÁ OCUPADO
       if (!res.ok) {
 
         if (data.error === "Horario ocupado") {
 
-          alert(
-            "Ese horario ya fue reservado. Elegí otro."
-          );
+          alert("Ese horario ya fue reservado.");
 
-          // 🔥 RECARGAR HORARIOS
           handleFechaChange(form.fecha);
 
         } else {
@@ -122,38 +115,7 @@ export default function ReservarTurno() {
 
       }
 
-      // 🔥 DEMO SIN PAGO REAL
       window.location.href = "/exito";
-
-      /*
-      // 🔥 PAGO REAL
-      const pago = await fetch("/api/pago", {
-
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json",
-        },
-
-        body: JSON.stringify({
-          ...form,
-          doctor,
-        }),
-
-      });
-
-      const pagoData = await pago.json();
-
-      if (pagoData.url) {
-
-        window.location.href = pagoData.url;
-
-      } else {
-
-        alert("Error al generar el pago");
-
-      }
-      */
 
     } catch {
 
@@ -167,22 +129,104 @@ export default function ReservarTurno() {
 
   return (
 
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-10">
+    <div className={`
+      min-h-screen
+      flex
+      items-center
+      justify-center
+      px-4
+      py-10
 
-      <div className="w-full max-w-2xl bg-white rounded-[28px] border border-slate-200 shadow-lg p-6 md:p-8">
+      ${
+        esLavadero
+          ? "bg-black"
+          : "bg-slate-50"
+      }
+    `}>
+
+      <div className={`
+        w-full
+        max-w-2xl
+        rounded-[28px]
+        border
+        shadow-2xl
+        p-6
+        md:p-8
+
+        ${
+          esLavadero
+            ? "bg-zinc-950 border-yellow-500/20"
+            : "bg-white border-slate-200"
+        }
+      `}>
 
         {/* HEADER */}
         <div className="text-center mb-8">
 
-          <div className="w-20 h-20 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-5 text-3xl">
-            🩺
-          </div>
+          {esLavadero ? (
 
-          <h1 className="text-3xl md:text-4xl font-bold text-slate-800">
-            Reserva tu turno
+            <img
+              src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1400&auto=format&fit=crop"
+              alt="Auto"
+              className="
+                w-full
+                h-56
+                object-cover
+                rounded-3xl
+                mb-6
+                border
+                border-yellow-500/30
+              "
+            />
+
+          ) : (
+
+            <div className="
+              w-20
+              h-20
+              rounded-full
+              bg-emerald-100
+              flex
+              items-center
+              justify-center
+              mx-auto
+              mb-5
+              text-3xl
+            ">
+              🩺
+            </div>
+
+          )}
+
+          <h1 className={`
+            text-3xl
+            md:text-4xl
+            font-bold
+
+            ${
+              esLavadero
+                ? "text-yellow-400"
+                : "text-slate-800"
+            }
+          `}>
+
+            {
+              esLavadero
+                ? "Reservá tu lavado"
+                : "Reserva tu turno"
+            }
+
           </h1>
 
-          <p className="text-slate-500 mt-3">
+          <p className={`
+            mt-3
+
+            ${
+              esLavadero
+                ? "text-zinc-400"
+                : "text-slate-500"
+            }
+          `}>
             Seleccioná una fecha y horario disponible
           </p>
 
@@ -194,127 +238,92 @@ export default function ReservarTurno() {
           className="flex flex-col gap-4"
         >
 
-          {/* NOMBRE */}
-          <input
-            type="text"
-            placeholder="Nombre completo"
-            required
-            onChange={(e) =>
-              setForm({
-                ...form,
-                nombre: e.target.value,
-              })
-            }
-            className="
-              w-full
-              min-h-[56px]
-              border
-              border-slate-300
-              rounded-2xl
-              px-4
-              text-slate-900
-              placeholder:text-slate-400
-              outline-none
-              transition
-              focus:border-emerald-600
-              focus:ring-2
-              focus:ring-emerald-200
-            "
-          />
-
-          {/* TELÉFONO */}
-          <input
-            type="text"
-            placeholder="Teléfono"
-            required
-            onChange={(e) =>
-              setForm({
-                ...form,
-                telefono: e.target.value,
-              })
-            }
-            className="
-              w-full
-              min-h-[56px]
-              border
-              border-slate-300
-              rounded-2xl
-              px-4
-              text-slate-900
-              placeholder:text-slate-400
-              outline-none
-              transition
-              focus:border-emerald-600
-              focus:ring-2
-              focus:ring-emerald-200
-            "
-          />
-
-          {/* EMAIL */}
-          <input
-            type="email"
-            placeholder="Email"
-            required
-            onChange={(e) =>
-              setForm({
-                ...form,
-                email: e.target.value,
-              })
-            }
-            className="
-              w-full
-              min-h-[56px]
-              border
-              border-slate-300
-              rounded-2xl
-              px-4
-              text-slate-900
-              placeholder:text-slate-400
-              outline-none
-              transition
-              focus:border-emerald-600
-              focus:ring-2
-              focus:ring-emerald-200
-            "
-          />
-
-          {/* FECHA */}
-          <div>
-
-            <label className="block mb-2 text-sm font-medium text-slate-700">
-              Seleccionar fecha
-            </label>
+          {[
+            {
+              placeholder: "Nombre completo",
+              key: "nombre",
+              type: "text",
+            },
+            {
+              placeholder: "Teléfono",
+              key: "telefono",
+              type: "text",
+            },
+            {
+              placeholder: "Email",
+              key: "email",
+              type: "email",
+            },
+          ].map((campo) => (
 
             <input
-              type="date"
+              key={campo.key}
+              type={campo.type}
+              placeholder={campo.placeholder}
               required
               onChange={(e) =>
-                handleFechaChange(e.target.value)
+                setForm({
+                  ...form,
+                  [campo.key]: e.target.value,
+                })
               }
-              className="
+              className={`
                 w-full
                 min-h-[56px]
-                border
-                border-slate-300
                 rounded-2xl
                 px-4
-                text-slate-900
                 outline-none
                 transition
-                focus:border-emerald-600
-                focus:ring-2
-                focus:ring-emerald-200
-              "
+                border
+
+                ${
+                  esLavadero
+                    ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
+                    : "border-slate-300 text-slate-900 focus:border-emerald-600"
+                }
+              `}
             />
 
-          </div>
+          ))}
+
+          {/* FECHA */}
+          <input
+            type="date"
+            required
+            onChange={(e) =>
+              handleFechaChange(e.target.value)
+            }
+            className={`
+              w-full
+              min-h-[56px]
+              rounded-2xl
+              px-4
+              outline-none
+              border
+
+              ${
+                esLavadero
+                  ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
+                  : "border-slate-300 text-slate-900 focus:border-emerald-600"
+              }
+            `}
+          />
 
           {/* HORARIOS */}
           {form.fecha && (
 
-            <div className="mt-2">
+            <div>
 
-              <h3 className="font-semibold text-slate-800 mb-4">
+              <h3 className={`
+                font-semibold
+                mb-4
+
+                ${
+                  esLavadero
+                    ? "text-yellow-400"
+                    : "text-slate-800"
+                }
+              `}>
                 Horarios disponibles
               </h3>
 
@@ -337,6 +346,7 @@ export default function ReservarTurno() {
                         })
                       }
                       className={`
+
                         min-h-[52px]
                         rounded-2xl
                         text-sm
@@ -346,11 +356,16 @@ export default function ReservarTurno() {
 
                         ${
                           ocupado
-                            ? "bg-red-100 text-red-500 border-red-200 cursor-not-allowed"
+                            ? "bg-red-900/30 text-red-400 border-red-500/30 cursor-not-allowed"
                             : form.hora === h
-                            ? "bg-emerald-600 text-white border-emerald-600 shadow-md scale-105"
-                            : "bg-white text-slate-700 border-slate-300 hover:bg-emerald-50 hover:border-emerald-300"
+                            ? esLavadero
+                              ? "bg-yellow-500 text-black border-yellow-500"
+                              : "bg-emerald-600 text-white border-emerald-600"
+                            : esLavadero
+                            ? "bg-zinc-900 text-yellow-300 border-zinc-700 hover:border-yellow-500"
+                            : "bg-white text-slate-700 border-slate-300 hover:bg-emerald-50"
                         }
+
                       `}
                     >
                       {ocupado ? `${h} ✕` : h}
@@ -366,59 +381,32 @@ export default function ReservarTurno() {
 
           )}
 
-          {/* INFO PAGO */}
-          <div className="mt-6 bg-emerald-50 border border-emerald-200 rounded-2xl p-4">
-
-            <p className="text-slate-800 font-semibold mb-2">
-              Información de pago
-            </p>
-
-            <div className="space-y-1 text-sm text-slate-600">
-
-              <p>
-                Valor de la consulta:
-                <strong className="text-slate-800">
-                  {" "} $20.000
-                </strong>
-              </p>
-
-              <p>
-                Seña online:
-                <strong className="text-emerald-700">
-                  {" "} $5.000
-                </strong>
-              </p>
-
-              <p>
-                El saldo restante se abona el día del turno.
-              </p>
-
-            </div>
-
-          </div>
-
-          {/* BOTÓN */}
+          {/* BOTON */}
           <button
             disabled={!form.hora || loading}
-            className="
+            className={`
               mt-6
               min-h-[58px]
-              bg-emerald-600
-              hover:bg-emerald-700
-              transition
-              text-white
               rounded-2xl
               font-semibold
               text-lg
               shadow-md
-              disabled:bg-slate-300
-              disabled:shadow-none
-              disabled:cursor-not-allowed
-            "
+              transition
+
+              ${
+                esLavadero
+                  ? "bg-yellow-500 hover:bg-yellow-400 text-black"
+                  : "bg-emerald-600 hover:bg-emerald-700 text-white"
+              }
+            `}
           >
-            {loading
-              ? "Procesando..."
-              : "Confirmar turno"}
+            {
+              loading
+                ? "Procesando..."
+                : esLavadero
+                ? "Confirmar lavado"
+                : "Confirmar turno"
+            }
           </button>
 
         </form>
