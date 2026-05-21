@@ -407,7 +407,7 @@ export default function ReservarTurno() {
         }
       `}
     >
-      Fecha y hora
+     
     </div>
   )
 }
