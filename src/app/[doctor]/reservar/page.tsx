@@ -332,28 +332,47 @@ export default function ReservarTurno() {
             `}
           />
 
-          {/* FECHA */}
-          <input
-            type="date"
-            required
-            onChange={(e) =>
-              handleFechaChange(e.target.value)
-            }
-            className={`
-              w-full
-              min-h-[56px]
-              rounded-2xl
-              px-4
-              outline-none
-              border
+{/* FECHA */}
+<div>
 
-              ${
-                esLavadero
-                  ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
-                  : "border-slate-300 text-slate-900 focus:border-emerald-600"
-              }
-            `}
-          />
+  <label className={`
+    block
+    text-sm
+    font-semibold
+    mb-2
+
+    ${
+      esLavadero
+        ? "text-yellow-300"
+        : "text-slate-700"
+    }
+  `}>
+    Fecha del turno
+  </label>
+
+  <input
+    type="date"
+    required
+    onChange={(e) =>
+      handleFechaChange(e.target.value)
+    }
+    className={`
+      w-full
+      min-h-[56px]
+      rounded-2xl
+      px-4
+      outline-none
+      border
+
+      ${
+        esLavadero
+          ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
+          : "border-slate-300 text-slate-900 focus:border-emerald-600"
+      }
+    `}
+  />
+
+</div>
 
           {/* HORARIOS */}
           {
