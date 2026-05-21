@@ -332,37 +332,64 @@ export default function ReservarTurno() {
             `}
           />
 
-          {/* FECHA */}
-<input
-  type="date"
-  required
-  value={form.fecha}
-  onChange={(e) =>
-    handleFechaChange(e.target.value)
-  }
-  className={`
-    w-full
-    min-h-[56px]
-    rounded-2xl
-    px-4
-    outline-none
-    border
-    transition
+{/* FECHA */}
+<div className="relative">
 
-    ${
-      esLavadero
-        ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
-        : "border-slate-300 text-slate-900 focus:border-emerald-600"
+  <input
+    type="date"
+    required
+    value={form.fecha}
+    onChange={(e) =>
+      handleFechaChange(e.target.value)
     }
-  `}
-  style={{
-    color: form.fecha
-      ? esLavadero
-        ? "white"
-        : "#0f172a"
-      : "#94a3b8",
-  }}
-/>
+    className={`
+      w-full
+      h-[56px]
+      rounded-2xl
+      px-4
+      outline-none
+      border
+      transition
+
+      ${
+        esLavadero
+          ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
+          : "border-slate-300 text-slate-900 focus:border-emerald-600"
+      }
+    `}
+    style={{
+      color: form.fecha
+        ? esLavadero
+          ? "white"
+          : "#0f172a"
+        : "transparent",
+    }}
+  />
+
+  {
+    !form.fecha && (
+      <span
+        className={`
+          absolute
+          left-4
+          top-1/2
+          -translate-y-1/2
+          pointer-events-none
+          text-sm
+
+          ${
+            esLavadero
+              ? "text-zinc-400"
+              : "text-slate-400"
+          }
+        `}
+      >
+        Fecha y hora
+      </span>
+    )
+  }
+
+</div>
 
 {
   !form.fecha && (
