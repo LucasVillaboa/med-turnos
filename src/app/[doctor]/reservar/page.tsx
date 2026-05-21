@@ -332,47 +332,32 @@ export default function ReservarTurno() {
             `}
           />
 
-{/* FECHA */}
-<div>
+          {/* FECHA */}
+          <input
+            type={form.fecha ? "date" : "text"}
+            placeholder="Fecha del turno"
+            required
+            value={form.fecha}
+            onFocus={(e) => (e.target.type = "date")}
+            onChange={(e) =>
+              handleFechaChange(e.target.value)
+            }
+            className={`
+              w-full
+              min-h-[56px]
+              rounded-2xl
+              px-4
+              outline-none
+              border
+              transition
 
-  <label className={`
-    block
-    text-sm
-    font-semibold
-    mb-2
-
-    ${
-      esLavadero
-        ? "text-yellow-300"
-        : "text-slate-700"
-    }
-  `}>
-    Fecha del turno
-  </label>
-
-  <input
-    type="date"
-    required
-    onChange={(e) =>
-      handleFechaChange(e.target.value)
-    }
-    className={`
-      w-full
-      min-h-[56px]
-      rounded-2xl
-      px-4
-      outline-none
-      border
-
-      ${
-        esLavadero
-          ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
-          : "border-slate-300 text-slate-900 focus:border-emerald-600"
-      }
-    `}
-  />
-
-</div>
+              ${
+                esLavadero
+                  ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
+                  : "border-slate-300 text-slate-900 focus:border-emerald-600"
+              }
+            `}
+          />
 
           {/* HORARIOS */}
           {
@@ -390,7 +375,7 @@ export default function ReservarTurno() {
                       : "text-slate-800"
                   }
                 `}>
-                  Horarios disponibles
+                  Seleccionar horario
                 </h3>
 
                 <div className="grid grid-cols-3 md:grid-cols-4 gap-3">
