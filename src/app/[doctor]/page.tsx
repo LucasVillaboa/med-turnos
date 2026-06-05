@@ -9,17 +9,18 @@ export default async function DoctorPage({ params }: Props) {
   const { doctor } = await params;
 
   const esLavadero = doctor === "lavadero";
+  const esFutbol5 = doctor === "futbol5";
 
   const doctors: Record<string, string> = {
-    lavadero: "Lavadero",
-    lopez: "Dra. María López",
-    demo: "Consultorio Demo",
+    lavadero: "Foxtro",
+    futbol5: "Complejo Fútbol 5",
+    consultorio: "Consultorio Médico",
   };
 
   const specialties: Record<string, string> = {
     lavadero: "Lavado premium y detallado",
-    lopez: "Especialista en Cardiología",
-    demo: "Sistema de turnos online",
+    futbol5: "Reserva de canchas online",
+    consultorio: "Turnos médicos online",
   };
 
   return (
@@ -34,6 +35,8 @@ export default async function DoctorPage({ params }: Props) {
       ${
         esLavadero
           ? "bg-black"
+          : esFutbol5
+          ? "bg-green-50"
           : "bg-slate-50"
       }
     `}>
@@ -50,18 +53,19 @@ export default async function DoctorPage({ params }: Props) {
         ${
           esLavadero
             ? "bg-zinc-950 border-yellow-500/30"
+            : esFutbol5
+            ? "bg-white border-green-300"
             : "bg-white border-slate-200"
         }
       `}>
 
-        {/* IMAGEN */}
         <div className="mb-6">
 
           {esLavadero ? (
 
             <img
               src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1400&auto=format&fit=crop"
-              alt="Auto deportivo"
+              alt="Auto"
               className="
                 w-full
                 h-64
@@ -72,6 +76,22 @@ export default async function DoctorPage({ params }: Props) {
                 border-yellow-500/30
               "
             />
+
+          ) : esFutbol5 ? (
+
+            <div className="
+              w-28
+              h-28
+              bg-green-100
+              rounded-full
+              mx-auto
+              flex
+              items-center
+              justify-center
+              text-5xl
+            ">
+              ⚽
+            </div>
 
           ) : (
 
@@ -93,7 +113,6 @@ export default async function DoctorPage({ params }: Props) {
 
         </div>
 
-        {/* TITULO */}
         <h1 className={`
           text-4xl
           font-bold
@@ -102,13 +121,14 @@ export default async function DoctorPage({ params }: Props) {
           ${
             esLavadero
               ? "text-yellow-400"
+              : esFutbol5
+              ? "text-green-700"
               : "text-slate-800"
           }
         `}>
-          {doctors[doctor] || "Profesional"}
+          {doctors[doctor] || "Sistema de reservas"}
         </h1>
 
-        {/* SUB */}
         <p className={`
           mb-8
           text-lg
@@ -116,13 +136,14 @@ export default async function DoctorPage({ params }: Props) {
           ${
             esLavadero
               ? "text-yellow-200"
+              : esFutbol5
+              ? "text-green-600"
               : "text-slate-500"
           }
         `}>
           {specialties[doctor]}
         </p>
 
-        {/* DESC */}
         <p className={`
           mb-8
           leading-relaxed
@@ -135,13 +156,16 @@ export default async function DoctorPage({ params }: Props) {
               : "text-slate-500"
           }
         `}>
+
           {esLavadero
             ? "Reservá tu lavado premium online de forma rápida y moderna."
-            : "Reservá turnos online de forma rápida, moderna y segura."
+            : esFutbol5
+            ? "Reservá tu cancha online en segundos."
+            : "Reservá turnos médicos online de forma rápida y segura."
           }
+
         </p>
 
-        {/* BOTON */}
         <Link
           href={`/${doctor}/reservar`}
           className={`
@@ -157,14 +181,20 @@ export default async function DoctorPage({ params }: Props) {
             ${
               esLavadero
                 ? "bg-yellow-500 hover:bg-yellow-400 text-black"
+                : esFutbol5
+                ? "bg-green-600 hover:bg-green-700 text-white"
                 : "bg-emerald-600 hover:bg-emerald-700 text-white"
             }
           `}
         >
+
           {esLavadero
             ? "Reservar lavado"
+            : esFutbol5
+            ? "Reservar cancha"
             : "Reservar turno"
           }
+
         </Link>
 
       </div>

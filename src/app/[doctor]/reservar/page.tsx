@@ -10,6 +10,7 @@ export default function ReservarTurno() {
   const doctor = params.doctor as string;
 
   const esLavadero = doctor === "lavadero";
+  const esFutbol5 = doctor === "futbol5";
 
   const [form, setForm] = useState({
     nombre: "",
@@ -111,11 +112,9 @@ export default function ReservarTurno() {
 
           handleFechaChange(form.fecha);
 
-        } else {
-
-          alert("Ocurrió un error");
-
-        }
+      } else {
+  alert(data.error);
+}
 
         setLoading(false);
 
@@ -172,41 +171,59 @@ export default function ReservarTurno() {
         <div className="text-center mb-8">
 
           {
-            esLavadero ? (
+            
+  esLavadero ? (
 
-              <img
-                src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1400&auto=format&fit=crop"
-                alt="Auto"
-                className="
-                  w-full
-                  h-56
-                  object-cover
-                  rounded-3xl
-                  mb-6
-                  border
-                  border-yellow-500/30
-                "
-              />
+    <img
+      src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1400&auto=format&fit=crop"
+      alt="Auto"
+      className="
+        w-full
+        h-56
+        object-cover
+        rounded-3xl
+        mb-6
+        border
+        border-yellow-500/30
+      "
+    />
 
-            ) : (
+  ) : esFutbol5 ? (
 
-              <div className="
-                w-20
-                h-20
-                rounded-full
-                bg-emerald-100
-                flex
-                items-center
-                justify-center
-                mx-auto
-                mb-5
-                text-3xl
-              ">
-                🩺
-              </div>
+    <div className="
+      w-20
+      h-20
+      rounded-full
+      bg-green-100
+      flex
+      items-center
+      justify-center
+      mx-auto
+      mb-5
+      text-4xl
+    ">
+      ⚽
+    </div>
 
-            )
-          }
+  ) : (
+
+    <div className="
+      w-20
+      h-20
+      rounded-full
+      bg-emerald-100
+      flex
+      items-center
+      justify-center
+      mx-auto
+      mb-5
+      text-3xl
+    ">
+      🩺
+    </div>
+
+  )
+            }
 
           <h1 className={`
             text-3xl
@@ -220,11 +237,13 @@ export default function ReservarTurno() {
             }
           `}>
 
-            {
-              esLavadero
-                ? "Reservá tu lavado"
-                : "Reservá tu turno"
-            }
+          {
+  esLavadero
+    ? "Reservá tu lavado"
+    : esFutbol5
+    ? "Reservá tu cancha"
+    : "Reservá tu turno"
+}
 
           </h1>
 
@@ -511,13 +530,15 @@ export default function ReservarTurno() {
             `}
           >
 
-            {
-              loading
-                ? "Procesando..."
-                : esLavadero
-                ? "Confirmar lavado"
-                : "Confirmar turno"
-            }
+     {
+  loading
+    ? "Procesando..."
+    : esLavadero
+    ? "Confirmar lavado"
+    : esFutbol5
+    ? "Confirmar reserva"
+    : "Confirmar turno"
+}
 
           </button>
 

@@ -1,8 +1,5 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { Resend } from "resend";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -10,22 +7,18 @@ const supabase = createClient(
 );
 
 export async function POST(req: Request) {
-
   try {
-
     const data = await req.json();
 
-    // 🔥 VERIFICAR SI YA EXISTE EL TURNO
-   const { data: existente } = await supabase
-  .from("turnos")
-  .select("id")
-  .eq("doctor", data.doctor)
-  .eq("fecha", data.fecha)
-  .eq("hora", data.hora);
+    // Verificar si ya existe
+    const { data: existente } = await supabase
+      .from("turnos")
+      .select("id")
+      .eq("doctor", data.doctor)
+      .eq("fecha", data.fecha)
+      .eq("hora", data.hora);
 
-    // 🔥 SI YA EXISTE
     if (existente && existente.length > 0) {
-
       return NextResponse.json(
         {
           error: "Horario ocupado",
@@ -34,15 +27,24 @@ export async function POST(req: Request) {
           status: 400,
         }
       );
-
     }
 
-    // 🔥 GUARDAR TURNO
+    // Guardar turno
     const { error } = await supabase
       .from("turnos")
-      .insert([data]);
+      .insert([
+        {
+          doctor: data.doctor,
+          nombre: data.nombre,
+          telefono: data.telefono,
+          email: data.email,
+          fecha: data.fecha,
+          hora: data.hora,
+        },
+      ]);
 
     if (error) {
+      console.error(error);
 
       return NextResponse.json(
         {
@@ -52,83 +54,13 @@ export async function POST(req: Request) {
           status: 500,
         }
       );
-
     }
-
-    // 🔥 EMAIL
-    await resend.emails.send({
-
-      from: "Turnos Médicos <onboarding@resend.dev>",
-      to: data.email,
-      subject: "Turno confirmado ✅",
-
-      html: `
-        <div style="
-          font-family: Arial, sans-serif;
-          padding: 20px;
-          color: #1e293b;
-          background: #f8fafc;
-        ">
-
-          <div style="
-            max-width: 500px;
-            margin: auto;
-            background: white;
-            padding: 30px;
-            border-radius: 16px;
-            border: 1px solid #dcfce7;
-          ">
-
-            <h2 style="
-              color: #16a34a;
-              margin-bottom: 20px;
-            ">
-              Turno confirmado ✅
-            </h2>
-
-            <p style="margin-bottom: 20px;">
-              Hola <strong>${data.nombre}</strong>,
-              tu reserva fue confirmada correctamente.
-            </p>
-
-            <div style="
-              background: #f8fafc;
-              padding: 16px;
-              border-radius: 12px;
-              margin-bottom: 24px;
-            ">
-
-              <p>
-                <strong>Fecha:</strong>
-                ${data.fecha}
-              </p>
-
-              <p>
-                <strong>Horario:</strong>
-                ${data.hora}
-              </p>
-
-            </div>
-
-            <p style="margin-bottom: 10px;">
-              Gracias por reservar tu turno online.
-            </p>
-
-            <p>
-              Te esperamos.
-            </p>
-
-          </div>
-
-        </div>
-      `,
-    });
 
     return NextResponse.json({
       ok: true,
     });
-
   } catch (err) {
+    console.error(err);
 
     return NextResponse.json(
       {
@@ -138,7 +70,5 @@ export async function POST(req: Request) {
         status: 500,
       }
     );
-
   }
-
 }
