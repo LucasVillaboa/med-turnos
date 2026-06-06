@@ -68,26 +68,97 @@ export default function Futbol5LoginPage() {
         <form
           onSubmit={handleLogin}
           className="flex flex-col gap-5"
+          autoComplete="off"
         >
 
-          <input
-            type="text"
-            placeholder="Usuario"
-            value={usuario}
-            onChange={(e) => setUsuario(e.target.value)}
-            className="w-full min-h-[58px] border border-slate-300 rounded-2xl px-5"
-          />
+          <div>
 
-          <input
-            type="password"
-            placeholder="Contraseña"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full min-h-[58px] border border-slate-300 rounded-2xl px-5"
-          />
+            <label className="block text-sm font-semibold text-green-700 mb-2">
+              Usuario
+            </label>
+
+            <input
+              type="text"
+              autoComplete="off"
+              spellCheck={false}
+              placeholder="Ingresar usuario"
+              value={usuario}
+              onChange={(e) => setUsuario(e.target.value)}
+              className="
+                w-full
+                min-h-[58px]
+                bg-white
+                text-slate-900
+                placeholder:text-slate-400
+                border
+                border-slate-300
+                rounded-2xl
+                px-5
+                text-base
+                outline-none
+                shadow-sm
+                focus:border-green-500
+                focus:ring-4
+                focus:ring-green-100
+                transition
+              "
+              style={{
+                WebkitTextFillColor: "#0f172a",
+              }}
+            />
+
+          </div>
+
+          <div>
+
+            <label className="block text-sm font-semibold text-green-700 mb-2">
+              Contraseña
+            </label>
+
+            <input
+              type="password"
+              autoComplete="new-password"
+              placeholder="Ingresar contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="
+                w-full
+                min-h-[58px]
+                bg-white
+                text-slate-900
+                placeholder:text-slate-400
+                border
+                border-slate-300
+                rounded-2xl
+                px-5
+                text-base
+                outline-none
+                shadow-sm
+                focus:border-green-500
+                focus:ring-4
+                focus:ring-green-100
+                transition
+              "
+              style={{
+                WebkitTextFillColor: "#0f172a",
+              }}
+            />
+
+          </div>
 
           <button
-            className="min-h-[58px] bg-green-600 hover:bg-green-700 text-white rounded-2xl font-bold"
+            className="
+              min-h-[58px]
+              bg-green-600
+              hover:bg-green-700
+              active:scale-[0.99]
+              transition
+              text-white
+              rounded-2xl
+              font-bold
+              text-lg
+              shadow-lg
+            "
           >
             Ingresar
           </button>

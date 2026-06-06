@@ -86,9 +86,23 @@ export default function Futbol5PanelPage() {
 
     <div className="min-h-screen bg-green-50">
 
+      {/* HEADER */}
       <div className="bg-white border-b border-green-200">
 
-        <div className="max-w-7xl mx-auto px-6 py-6 flex justify-between items-center">
+        <div
+          className="
+            max-w-7xl
+            mx-auto
+            px-6
+            py-6
+            flex
+            flex-col
+            gap-4
+            md:flex-row
+            md:justify-between
+            md:items-center
+          "
+        >
 
           <div className="flex items-center gap-4">
 
@@ -112,7 +126,16 @@ export default function Futbol5PanelPage() {
 
           <button
             onClick={cerrarSesion}
-            className="bg-red-500 text-white px-5 py-3 rounded-2xl"
+            className="
+              bg-red-500
+              hover:bg-red-600
+              transition
+              text-white
+              px-5
+              py-3
+              rounded-2xl
+              font-semibold
+            "
           >
             Cerrar sesión
           </button>
@@ -121,9 +144,11 @@ export default function Futbol5PanelPage() {
 
       </div>
 
+      {/* CONTENIDO */}
       <div className="max-w-7xl mx-auto px-6 py-10">
 
-        <div className="grid md:grid-cols-3 gap-6 mb-10">
+        {/* CARDS */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
 
           <div className="bg-white rounded-3xl p-6 shadow">
 
@@ -144,15 +169,15 @@ export default function Futbol5PanelPage() {
             </p>
 
             <h2 className="text-4xl font-bold text-green-700">
+
               {
                 turnos.filter(
                   (t) =>
                     t.fecha ===
-                    new Date()
-                      .toISOString()
-                      .split("T")[0]
+                    new Date().toISOString().split("T")[0]
                 ).length
               }
+
             </h2>
 
           </div>
@@ -171,6 +196,7 @@ export default function Futbol5PanelPage() {
 
         </div>
 
+        {/* TABLA */}
         <div className="bg-white rounded-3xl shadow overflow-hidden">
 
           <div className="p-6 border-b">
@@ -183,59 +209,106 @@ export default function Futbol5PanelPage() {
 
           {loading ? (
 
-            <div className="p-10">
+            <div className="p-10 text-center text-slate-500">
               Cargando...
+            </div>
+
+          ) : turnos.length === 0 ? (
+
+            <div className="p-10 text-center text-slate-500">
+              No hay reservas todavía
             </div>
 
           ) : (
 
-            <table className="w-full">
+            <div className="overflow-x-auto">
 
-              <thead>
+              <table className="w-full min-w-[700px]">
 
-                <tr className="bg-green-50">
+                <thead>
 
-                  <th className="text-left px-6 py-4">Cliente</th>
-                  <th className="text-left px-6 py-4">Teléfono</th>
-                  <th className="text-left px-6 py-4">Fecha</th>
-                  <th className="text-left px-6 py-4">Hora</th>
-                  <th className="text-left px-6 py-4">Acción</th>
+                  <tr className="bg-green-50">
 
-                </tr>
+                    <th className="text-left px-6 py-4 text-green-700">
+                      Cliente
+                    </th>
 
-              </thead>
+                    <th className="text-left px-6 py-4 text-green-700">
+                      Teléfono
+                    </th>
 
-              <tbody>
+                    <th className="text-left px-6 py-4 text-green-700">
+                      Fecha
+                    </th>
 
-                {turnos.map((turno) => (
+                    <th className="text-left px-6 py-4 text-green-700">
+                      Hora
+                    </th>
 
-                  <tr key={turno.id} className="border-t">
-
-                    <td className="px-6 py-4">{turno.nombre}</td>
-                    <td className="px-6 py-4">{turno.telefono}</td>
-                    <td className="px-6 py-4">{turno.fecha}</td>
-                    <td className="px-6 py-4">{turno.hora}</td>
-
-                    <td className="px-6 py-4">
-
-                      <button
-                        onClick={() =>
-                          eliminarTurno(turno.id)
-                        }
-                        className="bg-red-500 text-white px-4 py-2 rounded-xl"
-                      >
-                        Eliminar
-                      </button>
-
-                    </td>
+                    <th className="text-left px-6 py-4 text-green-700">
+                      Acción
+                    </th>
 
                   </tr>
 
-                ))}
+                </thead>
 
-              </tbody>
+                <tbody>
 
-            </table>
+                  {turnos.map((turno) => (
+
+                    <tr
+                      key={turno.id}
+                      className="border-t border-slate-200"
+                    >
+
+                      <td className="px-6 py-4 text-slate-800">
+                        {turno.nombre}
+                      </td>
+
+                      <td className="px-6 py-4 text-slate-800">
+                        {turno.telefono}
+                      </td>
+
+                      <td className="px-6 py-4 text-slate-800">
+                        {turno.fecha}
+                      </td>
+
+                      <td className="px-6 py-4 text-slate-800">
+                        {turno.hora}
+                      </td>
+
+                      <td className="px-6 py-4">
+
+                        <button
+                          onClick={() =>
+                            eliminarTurno(turno.id)
+                          }
+                          className="
+                            bg-red-500
+                            hover:bg-red-600
+                            transition
+                            text-white
+                            px-4
+                            py-2
+                            rounded-xl
+                            font-semibold
+                          "
+                        >
+                          Eliminar
+                        </button>
+
+                      </td>
+
+                    </tr>
+
+                  ))}
+
+                </tbody>
+
+              </table>
+
+            </div>
 
           )}
 
