@@ -25,9 +25,17 @@ export default function ReservarTurno() {
   const [loading, setLoading] = useState(false);
 
   // 🔥 GENERAR HORARIOS
-  const generarHorarios = () => {
+const generarHorarios = () => {
 
-    const lista = [];
+  const lista = [];
+
+  if (esFutbol5) {
+
+    for (let h = 18; h <= 23; h++) {
+      lista.push(`${h}:00`);
+    }
+
+  } else {
 
     for (let h = 9; h <= 18; h++) {
 
@@ -39,9 +47,11 @@ export default function ReservarTurno() {
 
     }
 
-    return lista;
+  }
 
-  };
+  return lista;
+
+};
 
   // 🔥 CAMBIO FECHA
   const handleFechaChange = async (fecha: string) => {
