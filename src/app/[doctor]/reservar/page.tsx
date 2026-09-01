@@ -11,6 +11,7 @@ export default function ReservarTurno() {
 
   const esLavadero = doctor === "lavadero";
   const esFutbol5 = doctor === "futbol5";
+  const esPadel = doctor === "padel";
 
   const [form, setForm] = useState({
     nombre: "",
@@ -32,6 +33,12 @@ const generarHorarios = () => {
   if (esFutbol5) {
 
     for (let h = 18; h <= 23; h++) {
+      lista.push(`${h}:00`);
+    }
+
+  } else if (esPadel) {
+
+    for (let h = 17; h <= 23; h++) {
       lista.push(`${h}:00`);
     }
 
@@ -157,6 +164,8 @@ const generarHorarios = () => {
       ${
         esLavadero
           ? "bg-black"
+          : esPadel
+          ? "bg-blue-50"
           : "bg-slate-50"
       }
     `}>
@@ -173,6 +182,8 @@ const generarHorarios = () => {
         ${
           esLavadero
             ? "bg-zinc-950 border-yellow-500/20"
+            : esPadel
+            ? "bg-white border-blue-300"
             : "bg-white border-slate-200"
         }
       `}>
@@ -181,7 +192,7 @@ const generarHorarios = () => {
         <div className="text-center mb-8">
 
           {
-            
+
   esLavadero ? (
 
    <img
@@ -218,6 +229,24 @@ const generarHorarios = () => {
   "
 />
 
+  ) : esPadel ? (
+
+    <img
+      src="/padel.jpeg"
+      alt="Pádel"
+      className="
+        w-28
+        h-28
+        object-cover
+        rounded-3xl
+        mx-auto
+        mb-5
+        border-2
+        border-blue-500
+        shadow-lg
+      "
+    />
+
   ) : (
 
    <img
@@ -247,6 +276,8 @@ const generarHorarios = () => {
             ${
               esLavadero
                 ? "text-yellow-400"
+                : esPadel
+                ? "text-blue-700"
                 : "text-slate-800"
             }
           `}>
@@ -255,6 +286,8 @@ const generarHorarios = () => {
   esLavadero
     ? "Reservá tu lavado"
     : esFutbol5
+    ? "Reservá tu cancha"
+    : esPadel
     ? "Reservá tu cancha"
     : "Reservá tu turno"
 }
@@ -267,6 +300,8 @@ const generarHorarios = () => {
             ${
               esLavadero
                 ? "text-zinc-400"
+                : esPadel
+                ? "text-blue-600"
                 : "text-slate-500"
             }
           `}>
@@ -304,6 +339,8 @@ const generarHorarios = () => {
               ${
                 esLavadero
                   ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
+                  : esPadel
+                  ? "border-blue-300 text-slate-900 focus:border-blue-600"
                   : "border-slate-300 text-slate-900 focus:border-emerald-600"
               }
             `}
@@ -332,6 +369,8 @@ const generarHorarios = () => {
               ${
                 esLavadero
                   ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
+                  : esPadel
+                  ? "border-blue-300 text-slate-900 focus:border-blue-600"
                   : "border-slate-300 text-slate-900 focus:border-emerald-600"
               }
             `}
@@ -360,6 +399,8 @@ const generarHorarios = () => {
               ${
                 esLavadero
                   ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
+                  : esPadel
+                  ? "border-blue-300 text-slate-900 focus:border-blue-600"
                   : "border-slate-300 text-slate-900 focus:border-emerald-600"
               }
             `}
@@ -387,6 +428,8 @@ const generarHorarios = () => {
       ${
         esLavadero
           ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
+          : esPadel
+          ? "border-blue-300 text-slate-900 focus:border-blue-600"
           : "border-slate-300 text-slate-900 focus:border-emerald-600"
       }
     `}
@@ -413,6 +456,8 @@ const generarHorarios = () => {
           ${
             esLavadero
               ? "text-zinc-400"
+              : esPadel
+              ? "text-blue-400"
               : "text-slate-400"
           }
         `}
@@ -440,7 +485,7 @@ const generarHorarios = () => {
         }
       `}
     >
-     
+
     </div>
   )
 }
@@ -458,6 +503,8 @@ const generarHorarios = () => {
                   ${
                     esLavadero
                       ? "text-yellow-400"
+                      : esPadel
+                      ? "text-blue-700"
                       : "text-slate-800"
                   }
                 `}>
@@ -498,9 +545,13 @@ const generarHorarios = () => {
                                 : form.hora === h
                                 ? esLavadero
                                   ? "bg-yellow-500 text-black border-yellow-500"
+                                  : esPadel
+                                  ? "bg-blue-600 text-white border-blue-600"
                                   : "bg-emerald-600 text-white border-emerald-600"
                                 : esLavadero
                                 ? "bg-zinc-900 text-yellow-300 border-zinc-700 hover:border-yellow-500"
+                                : esPadel
+                                ? "bg-white text-blue-700 border-blue-300 hover:bg-blue-50"
                                 : "bg-white text-slate-700 border-slate-300 hover:bg-emerald-50"
                             }
                           `}
@@ -539,6 +590,8 @@ const generarHorarios = () => {
               ${
                 esLavadero
                   ? "bg-yellow-500 hover:bg-yellow-400 text-black"
+                  : esPadel
+                  ? "bg-blue-600 hover:bg-blue-700 text-white"
                   : "bg-emerald-600 hover:bg-emerald-700 text-white"
               }
             `}
@@ -550,6 +603,8 @@ const generarHorarios = () => {
     : esLavadero
     ? "Confirmar lavado"
     : esFutbol5
+    ? "Confirmar reserva"
+    : esPadel
     ? "Confirmar reserva"
     : "Confirmar turno"
 }
@@ -565,3 +620,5 @@ const generarHorarios = () => {
   );
 
 }
+
+
