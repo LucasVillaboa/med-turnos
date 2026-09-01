@@ -67,8 +67,8 @@ export default async function DoctorPage({ params }: Props) {
   src="/lavadero.jpeg"
   alt="Lavadero"
   className="
-    w-28
-    h-28
+    w-48
+    h-48
     object-cover
     rounded-3xl
     mx-auto
@@ -85,8 +85,8 @@ export default async function DoctorPage({ params }: Props) {
   src="/futbol5.jpeg"
   alt="Lavadero"
   className="
-    w-28
-    h-28
+    w-48
+    h-48
     object-cover
     rounded-3xl
     mx-auto
@@ -103,8 +103,8 @@ export default async function DoctorPage({ params }: Props) {
   src="/turnomedico.jpeg"
   alt="Lavadero"
   className="
-    w-28
-    h-28
+    w-48
+    h-48
     object-cover
     rounded-3xl
     mx-auto
