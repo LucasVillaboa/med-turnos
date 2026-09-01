@@ -55,21 +55,21 @@ export default function LavaderoLoginPage() {
 
         <div className="text-center mb-8">
 
-          <img
-            src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1200&auto=format&fit=crop"
-            alt="Auto"
-            className="
-              w-28
-              h-28
-              object-cover
-              rounded-3xl
-              mx-auto
-              mb-5
-              border-2
-              border-yellow-500
-              shadow-lg
-            "
-          />
+   <img
+  src="/lavadero.jpeg"
+  alt="Lavadero"
+  className="
+    w-28
+    h-28
+    object-cover
+    rounded-3xl
+    mx-auto
+    mb-5
+    border-2
+    border-yellow-500
+    shadow-lg
+  "
+/>
 
           <h1 className="text-3xl font-bold text-yellow-400">
             Panel Lavadero

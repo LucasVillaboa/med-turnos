@@ -12,7 +12,7 @@ export default async function DoctorPage({ params }: Props) {
   const esFutbol5 = doctor === "futbol5";
 
   const doctors: Record<string, string> = {
-    lavadero: "Foxtro",
+    lavadero: "Lavadero",
     futbol5: "Complejo Fútbol 5",
     consultorio: "Consultorio Médico",
   };
@@ -63,51 +63,57 @@ export default async function DoctorPage({ params }: Props) {
 
           {esLavadero ? (
 
-            <img
-              src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1400&auto=format&fit=crop"
-              alt="Auto"
-              className="
-                w-full
-                h-64
-                object-cover
-                rounded-3xl
-                shadow-2xl
-                border
-                border-yellow-500/30
-              "
-            />
+               <img
+  src="/lavadero.jpeg"
+  alt="Lavadero"
+  className="
+    w-28
+    h-28
+    object-cover
+    rounded-3xl
+    mx-auto
+    mb-5
+    border-2
+    border-yellow-500
+    shadow-lg
+  "
+/>
 
           ) : esFutbol5 ? (
 
-            <div className="
-              w-28
-              h-28
-              bg-green-100
-              rounded-full
-              mx-auto
-              flex
-              items-center
-              justify-center
-              text-5xl
-            ">
-              ⚽
-            </div>
+              <img
+  src="/futbol5.jpeg"
+  alt="Lavadero"
+  className="
+    w-28
+    h-28
+    object-cover
+    rounded-3xl
+    mx-auto
+    mb-5
+    border-2
+    border-yellow-500
+    shadow-lg
+  "
+/>
 
           ) : (
 
-            <div className="
-              w-28
-              h-28
-              bg-emerald-100
-              rounded-full
-              mx-auto
-              flex
-              items-center
-              justify-center
-              text-5xl
-            ">
-              🩺
-            </div>
+           <img
+  src="/turnomedico.jpeg"
+  alt="Lavadero"
+  className="
+    w-28
+    h-28
+    object-cover
+    rounded-3xl
+    mx-auto
+    mb-5
+    border-2
+    border-yellow-500
+    shadow-lg
+  "
+/>
 
           )}
 

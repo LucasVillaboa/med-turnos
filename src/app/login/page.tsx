@@ -55,9 +55,21 @@ export default function LoginPage() {
 
         <div className="text-center mb-8">
 
-          <div className="w-24 h-24 rounded-3xl bg-emerald-100 flex items-center justify-center mx-auto mb-5 text-5xl shadow-sm">
-            🩺
-          </div>
+           <img
+  src="/turnomedico.jpeg"
+  alt="Lavadero"
+  className="
+    w-28
+    h-28
+    object-cover
+    rounded-3xl
+    mx-auto
+    mb-5
+    border-2
+    border-yellow-500
+    shadow-lg
+  "
+/>
 
           <h1 className="text-3xl font-bold text-slate-800">
             Panel profesional
@@ -72,6 +84,7 @@ export default function LoginPage() {
         <form
           onSubmit={handleLogin}
           className="flex flex-col gap-5"
+          autoComplete="off"
         >
 
           <div>
@@ -82,6 +95,8 @@ export default function LoginPage() {
 
             <input
               type="text"
+              autoComplete="off"
+              spellCheck={false}
               placeholder="Ingresar usuario"
               value={usuario}
               onChange={(e) => setUsuario(e.target.value)}
@@ -103,6 +118,9 @@ export default function LoginPage() {
                 focus:ring-emerald-100
                 transition
               "
+              style={{
+                WebkitTextFillColor: "#0f172a",
+              }}
             />
 
           </div>
@@ -115,6 +133,7 @@ export default function LoginPage() {
 
             <input
               type="password"
+              autoComplete="new-password"
               placeholder="Ingresar contraseña"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -136,6 +155,9 @@ export default function LoginPage() {
                 focus:ring-emerald-100
                 transition
               "
+              style={{
+                WebkitTextFillColor: "#0f172a",
+              }}
             />
 
           </div>

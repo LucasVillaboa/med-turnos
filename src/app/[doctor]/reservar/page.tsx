@@ -24,7 +24,7 @@ export default function ReservarTurno() {
   const [ocupados, setOcupados] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // 🔥 GENERAR HORARIOS
+  // GENERAR HORARIOS
 const generarHorarios = () => {
 
   const lista = [];
@@ -53,7 +53,7 @@ const generarHorarios = () => {
 
 };
 
-  // 🔥 CAMBIO FECHA
+  // CAMBIO FECHA
   const handleFechaChange = async (fecha: string) => {
 
     setForm({
@@ -86,7 +86,7 @@ const generarHorarios = () => {
 
   };
 
-  // 🔥 ENVIAR
+  // ENVIAR
   const handleSubmit = async (e: any) => {
 
     e.preventDefault();
@@ -184,53 +184,57 @@ const generarHorarios = () => {
             
   esLavadero ? (
 
-    <img
-      src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1400&auto=format&fit=crop"
-      alt="Auto"
-      className="
-        w-full
-        h-56
-        object-cover
-        rounded-3xl
-        mb-6
-        border
-        border-yellow-500/30
-      "
-    />
+   <img
+  src="/lavadero.jpeg"
+  alt="Lavadero"
+  className="
+    w-28
+    h-28
+    object-cover
+    rounded-3xl
+    mx-auto
+    mb-5
+    border-2
+    border-yellow-500
+    shadow-lg
+  "
+/>
 
   ) : esFutbol5 ? (
 
-    <div className="
-      w-20
-      h-20
-      rounded-full
-      bg-green-100
-      flex
-      items-center
-      justify-center
-      mx-auto
-      mb-5
-      text-4xl
-    ">
-      ⚽
-    </div>
+    <img
+  src="/futbol5.jpeg"
+  alt="Lavadero"
+  className="
+    w-28
+    h-28
+    object-cover
+    rounded-3xl
+    mx-auto
+    mb-5
+    border-2
+    border-yellow-500
+    shadow-lg
+  "
+/>
 
   ) : (
 
-    <div className="
-      w-20
-      h-20
-      rounded-full
-      bg-emerald-100
-      flex
-      items-center
-      justify-center
-      mx-auto
-      mb-5
-      text-3xl
-    ">
-      🩺
-    </div>
+   <img
+  src="/turnomedico.jpeg"
+  alt="Lavadero"
+  className="
+    w-28
+    h-28
+    object-cover
+    rounded-3xl
+    mx-auto
+    mb-5
+    border-2
+    border-yellow-500
+    shadow-lg
+  "
+/>
 
   )
             }

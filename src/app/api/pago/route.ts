@@ -47,7 +47,7 @@ body: JSON.stringify({
 
     const data = await response.json();
 
-    // 🔥 debug clave
+    
     if (!data.init_point) {
       console.log("ERROR MP:", data);
       return NextResponse.json({

@@ -88,10 +88,21 @@ export default function LavaderoPanelPage() {
 
           <div className="flex items-center gap-4">
 
-            <img
-              src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1200&auto=format&fit=crop"
-              className="w-20 h-20 rounded-2xl object-cover border-2 border-yellow-500"
-            />
+           <img
+  src="/lavadero.jpeg"
+  alt="Lavadero"
+  className="
+    w-28
+    h-28
+    object-cover
+    rounded-3xl
+    mx-auto
+    mb-5
+    border-2
+    border-yellow-500
+    shadow-lg
+  "
+/>
 
             <div>
               <h1 className="text-3xl font-bold text-yellow-400">

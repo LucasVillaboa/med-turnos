@@ -18,7 +18,7 @@ export default function PanelPage() {
 
   const [busqueda, setBusqueda] = useState("");
 
-  // 🔥 PROTEGER PANEL
+  //PROTEGER PANEL
   useEffect(() => {
 
     const auth = localStorage.getItem("auth");
@@ -29,7 +29,7 @@ export default function PanelPage() {
 
   }, [router]);
 
-  // 🔥 TRAER TURNOS
+  // TRAER TURNOS
   useEffect(() => {
 
     const obtenerTurnos = async () => {
@@ -53,7 +53,7 @@ export default function PanelPage() {
 
   }, []);
 
-  // 🔥 ELIMINAR
+  // ELIMINAR
   const eliminarTurno = async (id: number) => {
 
     const confirmar = confirm(
@@ -72,7 +72,7 @@ export default function PanelPage() {
     }
   };
 
-  // 🔥 LOGOUT
+  // LOGOUT
   const logout = () => {
 
     localStorage.removeItem("auth");
@@ -81,7 +81,7 @@ export default function PanelPage() {
     router.push("/login");
   };
 
-  // 🔥 FILTRO
+  // FILTRO
   const turnosFiltrados = useMemo(() => {
 
     return turnos.filter((turno) =>
@@ -92,7 +92,7 @@ export default function PanelPage() {
 
   }, [turnos, busqueda]);
 
-  // 🔥 ESTADÍSTICAS
+  //ESTADÍSTICAS
   const totalTurnos = turnos.length;
 
   const fechaHoy = new Date().toISOString().split("T")[0];
@@ -109,9 +109,21 @@ export default function PanelPage() {
 
         <div className="p-8 border-b border-slate-800">
 
-          <div className="w-16 h-16 rounded-2xl bg-emerald-500 flex items-center justify-center text-3xl mb-4">
-            🩺
-          </div>
+           <img
+  src="/turnomedico.jpeg"
+  alt="Lavadero"
+  className="
+    w-28
+    h-28
+    object-cover
+    rounded-3xl
+    mx-auto
+    mb-5
+    border-2
+    border-yellow-500
+    shadow-lg
+  "
+/>
 
           <h2 className="text-2xl font-bold">
             Turnos
