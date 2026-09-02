@@ -16,9 +16,9 @@ export default function PadelLoginPage() {
 
     const users: any = {
 
-      padel: {
+      Padel: {
         password: "Padel2026",
-        doctor: "Padel",
+        doctor: "padel",
       },
 
     };
