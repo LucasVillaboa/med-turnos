@@ -16,8 +16,8 @@ export default function LavaderoLoginPage() {
 
     const users: any = {
 
-      lavadero: {
-        password: "lavadero2026",
+      Lavadero: {
+        password: "Lavadero2026",
         doctor: "lavadero",
       },
 

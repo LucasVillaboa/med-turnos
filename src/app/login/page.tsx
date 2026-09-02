@@ -16,8 +16,8 @@ export default function LoginPage() {
 
     const users: any = {
 
-      consultorio: {
-        password: "consultorio2026",
+      Consultorio: {
+        password: "Consultorio2026",
         doctor: "demo",
       },
 

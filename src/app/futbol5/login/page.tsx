@@ -16,8 +16,8 @@ export default function Futbol5LoginPage() {
 
     const users: any = {
 
-      futbol5: {
-        password: "futbol52026",
+      Futbol5: {
+        password: "Futbol52026",
         doctor: "futbol5",
       },
 
