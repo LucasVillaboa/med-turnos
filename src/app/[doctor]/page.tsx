@@ -21,11 +21,6 @@ const serviciosBarberia = [
     precio: "$8.000",
   },
   {
-    imagen: "/estilo-barberia.jpeg",
-    alt: "Estilo masculino",
-    titulo: "Estilo",
-  },
-  {
     imagen: "/perfilado-cejas-barberia.jpeg",
     alt: "Perfilado de cejas",
     titulo: "Perfilado de cejas",
