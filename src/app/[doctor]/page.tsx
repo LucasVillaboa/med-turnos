@@ -12,16 +12,24 @@ const serviciosBarberia = [
     imagen: "/corte-barberia.jpeg",
     alt: "Corte de cabello",
     titulo: "Cortes",
+    precio: "$15.000",
   },
   {
     imagen: "/barba-barberia.jpeg",
     alt: "Barba",
     titulo: "Barba",
+    precio: "$8.000",
   },
   {
     imagen: "/estilo-barberia.jpeg",
     alt: "Estilo masculino",
     titulo: "Estilo",
+  },
+  {
+    imagen: "/perfilado-cejas-barberia.jpeg",
+    alt: "Perfilado de cejas",
+    titulo: "Perfilado de cejas",
+    precio: "$5.000",
   },
 ];
 
@@ -405,6 +413,12 @@ function Barberia() {
                       {servicio.titulo}
                     </h3>
 
+                    {servicio.precio && (
+                      <p className="mt-1 text-xl font-semibold text-yellow-400">
+                        {servicio.precio}
+                      </p>
+                    )}
+
                   </div>
 
                 </div>
@@ -446,20 +460,13 @@ function Barberia() {
 
         <div className="mt-8 rounded-3xl border border-zinc-800 bg-zinc-900 p-6">
 
-          {/* UBICACIÓN */}
+          <div className="flex items-start gap-4">
 
-          <a
-            href="https://www.google.com/maps/search/?api=1&query=Resistencia%2C%20Chaco%2C%20Argentina"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex min-h-[72px] items-center gap-4 rounded-2xl p-2 transition active:scale-[0.98] hover:bg-zinc-800/70"
-          >
-
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-yellow-500/10 text-2xl">
+            <div className="text-xl">
               📍
             </div>
 
-            <div className="min-w-0 flex-1">
+            <div>
 
               <p className="text-xs uppercase tracking-wider text-zinc-500">
                 Ubicación
@@ -469,17 +476,9 @@ function Barberia() {
                 Resistencia, Chaco
               </p>
 
-              <p className="mt-1 text-xs font-medium text-yellow-500">
-                Abrir en Google Maps →
-              </p>
-
             </div>
 
-            <div className="text-xl text-zinc-600 transition group-hover:translate-x-1 group-hover:text-yellow-500">
-              ›
-            </div>
-
-          </a>
+          </div>
 
           <div className="my-5 h-px bg-zinc-800" />
 
