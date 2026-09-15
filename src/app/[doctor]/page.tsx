@@ -279,7 +279,7 @@ function Barberia() {
 
         <img
           src="/barberia.jpeg"
-          alt="Black Barber"
+          alt="Barber"
           className="absolute inset-0 h-full w-full object-cover object-[center_35%]"
         />
 
@@ -290,7 +290,7 @@ function Barberia() {
         <div className="relative z-10 mx-auto flex h-full max-w-xl flex-col justify-end px-6 pb-12">
 
           <span className="mb-5 w-fit rounded-full border border-yellow-500/50 bg-black/40 px-4 py-2 text-xs font-semibold tracking-[0.2em] text-yellow-400 backdrop-blur-md">
-            BLACK BARBER
+            BARBER
           </span>
 
           <h1 className="text-5xl font-black leading-none tracking-tight sm:text-6xl">
