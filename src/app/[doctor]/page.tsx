@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { Clock, MapPin } from "lucide-react";
 
 interface Props {
   params: Promise<{ doctor: string }>;
@@ -447,60 +448,72 @@ function Barberia() {
 
         {/* INFORMACIÓN */}
 
-        <div className="mt-8 rounded-3xl border border-zinc-800 bg-zinc-900 p-6">
+{/* INFORMACIÓN */}
 
-          <div className="flex items-start gap-4">
+<div className="mt-8 rounded-3xl border border-zinc-800 bg-zinc-900 p-6">
 
-            <div className="text-xl">
-              📍
-            </div>
+  <div className="flex items-start gap-4">
 
-            <div>
+    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-yellow-500/20 bg-yellow-500/10">
+      <MapPin className="h-5 w-5 text-yellow-400" />
+    </div>
 
-              <p className="text-xs uppercase tracking-wider text-zinc-500">
-                Ubicación
-              </p>
+    <div>
 
-              <a
-                href="https://www.google.com/maps/search/?api=1&query=Resistencia%2C%20Chaco"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-1 block font-semibold transition hover:text-yellow-400"
-              >
-                Resistencia, Chaco
-              </a>
+      <p className="text-xs uppercase tracking-wider text-zinc-500">
+        Ubicación
+      </p>
 
-            </div>
+      <a
+        href="https://www.google.com/maps/search/?api=1&query=Resistencia%2C%20Chaco"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-1 block font-semibold transition hover:text-yellow-400"
+      >
+        Resistencia, Chaco
+      </a>
 
-          </div>
+      <a
+        href="https://www.google.com/maps/search/?api=1&query=Resistencia%2C%20Chaco"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-2 inline-flex items-center gap-1.5 text-sm font-medium text-yellow-400 transition hover:text-yellow-300"
+      >
+        Abrir en Google Maps
+        <span className="text-base">↗</span>
+      </a>
 
-          <div className="my-5 h-px bg-zinc-800" />
+    </div>
 
-          <div className="flex items-start gap-4">
+  </div>
 
-            <div className="text-xl">
-              🕐
-            </div>
+  <div className="my-5 h-px bg-zinc-800" />
 
-            <div>
+  <div className="flex items-start gap-4">
 
-              <p className="text-xs uppercase tracking-wider text-zinc-500">
-                Horarios
-              </p>
+    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-800/80">
+      <Clock className="h-5 w-5 text-zinc-300" />
+    </div>
 
-              <p className="mt-1 font-semibold">
-                Lunes a sábado
-              </p>
+    <div>
 
-              <p className="mt-1 text-sm text-zinc-400">
-                09:00 a 20:00
-              </p>
+      <p className="text-xs uppercase tracking-wider text-zinc-500">
+        Horarios
+      </p>
 
-            </div>
+      <p className="mt-1 font-semibold">
+        Lunes a sábado
+      </p>
 
-          </div>
+      <p className="mt-1 text-sm text-zinc-400">
+        09:00 a 20:00
+      </p>
 
-        </div>
+    </div>
+
+  </div>
+
+</div>
 
         {/* CTA */}
 
