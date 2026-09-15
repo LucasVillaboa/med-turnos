@@ -12,6 +12,7 @@ export default function ReservarTurno() {
   const esLavadero = doctor === "lavadero";
   const esFutbol5 = doctor === "futbol5";
   const esPadel = doctor === "padel";
+  const esBarberia = doctor === "barberia";
 
   const [form, setForm] = useState({
     nombre: "",
@@ -26,39 +27,50 @@ export default function ReservarTurno() {
   const [loading, setLoading] = useState(false);
 
   // GENERAR HORARIOS
-const generarHorarios = () => {
+  const generarHorarios = () => {
 
-  const lista = [];
+    const lista = [];
 
-  if (esFutbol5) {
+    if (esFutbol5) {
 
-    for (let h = 18; h <= 23; h++) {
-      lista.push(`${h}:00`);
-    }
+      for (let h = 18; h <= 23; h++) {
+        lista.push(`${h}:00`);
+      }
 
-  } else if (esPadel) {
+    } else if (esPadel) {
 
-    for (let h = 17; h <= 23; h++) {
-      lista.push(`${h}:00`);
-    }
+      for (let h = 17; h <= 23; h++) {
+        lista.push(`${h}:00`);
+      }
 
-  } else {
+    } else if (esBarberia) {
 
-    for (let h = 9; h <= 18; h++) {
+      for (let h = 9; h <= 20; h++) {
 
-      lista.push(`${h}:00`);
+        lista.push(`${h}:00`);
 
-      if (h !== 18) {
-        lista.push(`${h}:30`);
+        if (h !== 20) {
+          lista.push(`${h}:30`);
+        }
+
+      }
+
+    } else {
+
+      for (let h = 9; h <= 18; h++) {
+
+        lista.push(`${h}:00`);
+
+        if (h !== 18) {
+          lista.push(`${h}:30`);
+        }
+
       }
 
     }
 
-  }
-
-  return lista;
-
-};
+    return lista;
+  };
 
   // CAMBIO FECHA
   const handleFechaChange = async (fecha: string) => {
@@ -129,9 +141,11 @@ const generarHorarios = () => {
 
           handleFechaChange(form.fecha);
 
-      } else {
-  alert(data.error);
-}
+        } else {
+
+          alert(data.error);
+
+        }
 
         setLoading(false);
 
@@ -153,158 +167,191 @@ const generarHorarios = () => {
 
   return (
 
-    <div className={`
-      min-h-screen
-      flex
-      items-center
-      justify-center
-      px-4
-      py-10
-
-      ${
-        esLavadero
-          ? "bg-black"
-          : esPadel
-          ? "bg-blue-50"
-          : "bg-slate-50"
-      }
-    `}>
-
-      <div className={`
-        w-full
-        max-w-2xl
-        rounded-[28px]
-        border
-        shadow-2xl
-        p-6
-        md:p-8
+    <div
+      className={`
+        min-h-screen
+        flex
+        items-center
+        justify-center
+        px-4
+        py-10
 
         ${
           esLavadero
-            ? "bg-zinc-950 border-yellow-500/20"
+            ? "bg-black"
             : esPadel
-            ? "bg-white border-blue-300"
-            : "bg-white border-slate-200"
+            ? "bg-blue-50"
+            : esBarberia
+            ? "bg-zinc-950"
+            : "bg-slate-50"
         }
-      `}>
+      `}
+    >
+
+      <div
+        className={`
+          w-full
+          max-w-2xl
+          rounded-[28px]
+          border
+          shadow-2xl
+          p-6
+          md:p-8
+
+          ${
+            esLavadero
+              ? "bg-zinc-950 border-yellow-500/20"
+              : esPadel
+              ? "bg-white border-blue-300"
+              : esBarberia
+              ? "bg-black border-yellow-500/30"
+              : "bg-white border-slate-200"
+          }
+        `}
+      >
 
         {/* HEADER */}
         <div className="text-center mb-8">
 
           {
+            esLavadero ? (
 
-  esLavadero ? (
+              <img
+                src="/lavadero.jpeg"
+                alt="Lavadero"
+                className="
+                  w-28
+                  h-28
+                  object-cover
+                  rounded-3xl
+                  mx-auto
+                  mb-5
+                  border-2
+                  border-yellow-500
+                  shadow-lg
+                "
+              />
 
-   <img
-  src="/lavadero.jpeg"
-  alt="Lavadero"
-  className="
-    w-28
-    h-28
-    object-cover
-    rounded-3xl
-    mx-auto
-    mb-5
-    border-2
-    border-yellow-500
-    shadow-lg
-  "
-/>
+            ) : esFutbol5 ? (
 
-  ) : esFutbol5 ? (
+              <img
+                src="/futbol5.jpeg"
+                alt="Fútbol 5"
+                className="
+                  w-28
+                  h-28
+                  object-cover
+                  rounded-3xl
+                  mx-auto
+                  mb-5
+                  border-2
+                  border-yellow-500
+                  shadow-lg
+                "
+              />
 
-    <img
-  src="/futbol5.jpeg"
-  alt="Lavadero"
-  className="
-    w-28
-    h-28
-    object-cover
-    rounded-3xl
-    mx-auto
-    mb-5
-    border-2
-    border-yellow-500
-    shadow-lg
-  "
-/>
+            ) : esPadel ? (
 
-  ) : esPadel ? (
+              <img
+                src="/padel.jpeg"
+                alt="Pádel"
+                className="
+                  w-28
+                  h-28
+                  object-cover
+                  rounded-3xl
+                  mx-auto
+                  mb-5
+                  border-2
+                  border-blue-500
+                  shadow-lg
+                "
+              />
 
-    <img
-      src="/padel.jpeg"
-      alt="Pádel"
-      className="
-        w-28
-        h-28
-        object-cover
-        rounded-3xl
-        mx-auto
-        mb-5
-        border-2
-        border-blue-500
-        shadow-lg
-      "
-    />
+            ) : esBarberia ? (
 
-  ) : (
+              <img
+                src="/barberia.jpeg"
+                alt="Black Barber"
+                className="
+                  w-68
+                  h-68
+                  object-cover
+                  rounded-3xl
+                  mx-auto
+                  mb-5
+                  border-2
+                  border-yellow-500
+                  shadow-lg
+                "
+              />
 
-   <img
-  src="/turnomedico.jpeg"
-  alt="Lavadero"
-  className="
-    w-28
-    h-28
-    object-cover
-    rounded-3xl
-    mx-auto
-    mb-5
-    border-2
-    border-yellow-500
-    shadow-lg
-  "
-/>
+            ) : (
 
-  )
-            }
+              <img
+                src="/turnomedico.jpeg"
+                alt="Consultorio Médico"
+                className="
+                  w-28
+                  h-28
+                  object-cover
+                  rounded-3xl
+                  mx-auto
+                  mb-5
+                  border-2
+                  border-yellow-500
+                  shadow-lg
+                "
+              />
 
-          <h1 className={`
-            text-3xl
-            md:text-4xl
-            font-bold
+            )
+          }
 
-            ${
+          <h1
+            className={`
+              text-3xl
+              md:text-4xl
+              font-bold
+
+              ${
+                esLavadero
+                  ? "text-yellow-400"
+                  : esPadel
+                  ? "text-blue-700"
+                  : esBarberia
+                  ? "text-yellow-400"
+                  : "text-slate-800"
+              }
+            `}
+          >
+            {
               esLavadero
-                ? "text-yellow-400"
+                ? "Reservá tu lavado"
+                : esFutbol5
+                ? "Reservá tu cancha"
                 : esPadel
-                ? "text-blue-700"
-                : "text-slate-800"
+                ? "Reservá tu cancha"
+                : esBarberia
+                ? "Reservá tu turno"
+                : "Reservá tu turno"
             }
-          `}>
-
-          {
-  esLavadero
-    ? "Reservá tu lavado"
-    : esFutbol5
-    ? "Reservá tu cancha"
-    : esPadel
-    ? "Reservá tu cancha"
-    : "Reservá tu turno"
-}
-
           </h1>
 
-          <p className={`
-            mt-3
+          <p
+            className={`
+              mt-3
 
-            ${
-              esLavadero
-                ? "text-zinc-400"
-                : esPadel
-                ? "text-blue-600"
-                : "text-slate-500"
-            }
-          `}>
+              ${
+                esLavadero
+                  ? "text-zinc-400"
+                  : esPadel
+                  ? "text-blue-600"
+                  : esBarberia
+                  ? "text-zinc-400"
+                  : "text-slate-500"
+              }
+            `}
+          >
             Seleccioná fecha y horario disponible
           </p>
 
@@ -341,6 +388,8 @@ const generarHorarios = () => {
                   ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
                   : esPadel
                   ? "border-blue-300 text-slate-900 focus:border-blue-600"
+                  : esBarberia
+                  ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
                   : "border-slate-300 text-slate-900 focus:border-emerald-600"
               }
             `}
@@ -371,6 +420,8 @@ const generarHorarios = () => {
                   ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
                   : esPadel
                   ? "border-blue-300 text-slate-900 focus:border-blue-600"
+                  : esBarberia
+                  ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
                   : "border-slate-300 text-slate-900 focus:border-emerald-600"
               }
             `}
@@ -401,94 +452,77 @@ const generarHorarios = () => {
                   ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
                   : esPadel
                   ? "border-blue-300 text-slate-900 focus:border-blue-600"
+                  : esBarberia
+                  ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
                   : "border-slate-300 text-slate-900 focus:border-emerald-600"
               }
             `}
           />
 
-{/* FECHA */}
-<div className="relative">
+          {/* FECHA */}
+          <div className="relative">
 
-  <input
-    type="date"
-    required
-    value={form.fecha}
-    onChange={(e) =>
-      handleFechaChange(e.target.value)
-    }
-    className={`
-      w-full
-      h-[56px]
-      rounded-2xl
-      px-4
-      outline-none
-      border
-      transition
+            <input
+              type="date"
+              required
+              value={form.fecha}
+              onChange={(e) =>
+                handleFechaChange(e.target.value)
+              }
+              className={`
+                w-full
+                h-[56px]
+                rounded-2xl
+                px-4
+                outline-none
+                border
+                transition
 
-      ${
-        esLavadero
-          ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
-          : esPadel
-          ? "border-blue-300 text-slate-900 focus:border-blue-600"
-          : "border-slate-300 text-slate-900 focus:border-emerald-600"
-      }
-    `}
-    style={{
-      color: form.fecha
-        ? esLavadero
-          ? "white"
-          : "#0f172a"
-        : "transparent",
-    }}
-  />
+                ${
+                  esLavadero
+                    ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
+                    : esPadel
+                    ? "border-blue-300 text-slate-900 focus:border-blue-600"
+                    : esBarberia
+                    ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
+                    : "border-slate-300 text-slate-900 focus:border-emerald-600"
+                }
+              `}
+              style={{
+                color: form.fecha
+                  ? esLavadero || esBarberia
+                    ? "white"
+                    : "#0f172a"
+                  : "transparent",
+              }}
+            />
 
-  {
-    !form.fecha && (
-      <span
-        className={`
-          absolute
-          left-4
-          top-1/2
-          -translate-y-1/2
-          pointer-events-none
-          text-sm
+            {
+              !form.fecha && (
+                <span
+                  className={`
+                    absolute
+                    left-4
+                    top-1/2
+                    -translate-y-1/2
+                    pointer-events-none
+                    text-sm
 
-          ${
-            esLavadero
-              ? "text-zinc-400"
-              : esPadel
-              ? "text-blue-400"
-              : "text-slate-400"
-          }
-        `}
-      >
-        Fecha y hora
-      </span>
-    )
-  }
+                    ${
+                      esLavadero || esBarberia
+                        ? "text-zinc-400"
+                        : esPadel
+                        ? "text-blue-400"
+                        : "text-slate-400"
+                    }
+                  `}
+                >
+                  Fecha y hora
+                </span>
+              )
+            }
 
-</div>
-
-{
-  !form.fecha && (
-    <div
-      className={`
-        pointer-events-none
-        -mt-[44px]
-        ml-4
-        text-sm
-
-        ${
-          esLavadero
-            ? "text-zinc-400"
-            : "text-slate-400"
-        }
-      `}
-    >
-
-    </div>
-  )
-}
+          </div>
 
           {/* HORARIOS */}
           {
@@ -496,18 +530,22 @@ const generarHorarios = () => {
 
               <div>
 
-                <h3 className={`
-                  font-semibold
-                  mb-4
+                <h3
+                  className={`
+                    font-semibold
+                    mb-4
 
-                  ${
-                    esLavadero
-                      ? "text-yellow-400"
-                      : esPadel
-                      ? "text-blue-700"
-                      : "text-slate-800"
-                  }
-                `}>
+                    ${
+                      esLavadero
+                        ? "text-yellow-400"
+                        : esPadel
+                        ? "text-blue-700"
+                        : esBarberia
+                        ? "text-yellow-400"
+                        : "text-slate-800"
+                    }
+                  `}
+                >
                   Seleccionar horario
                 </h3>
 
@@ -547,11 +585,15 @@ const generarHorarios = () => {
                                   ? "bg-yellow-500 text-black border-yellow-500"
                                   : esPadel
                                   ? "bg-blue-600 text-white border-blue-600"
+                                  : esBarberia
+                                  ? "bg-yellow-500 text-black border-yellow-500"
                                   : "bg-emerald-600 text-white border-emerald-600"
                                 : esLavadero
                                 ? "bg-zinc-900 text-yellow-300 border-zinc-700 hover:border-yellow-500"
                                 : esPadel
                                 ? "bg-white text-blue-700 border-blue-300 hover:bg-blue-50"
+                                : esBarberia
+                                ? "bg-zinc-900 text-yellow-300 border-zinc-700 hover:border-yellow-500"
                                 : "bg-white text-slate-700 border-slate-300 hover:bg-emerald-50"
                             }
                           `}
@@ -592,22 +634,26 @@ const generarHorarios = () => {
                   ? "bg-yellow-500 hover:bg-yellow-400 text-black"
                   : esPadel
                   ? "bg-blue-600 hover:bg-blue-700 text-white"
+                  : esBarberia
+                  ? "bg-yellow-500 hover:bg-yellow-400 text-black"
                   : "bg-emerald-600 hover:bg-emerald-700 text-white"
               }
             `}
           >
 
-     {
-  loading
-    ? "Procesando..."
-    : esLavadero
-    ? "Confirmar lavado"
-    : esFutbol5
-    ? "Confirmar reserva"
-    : esPadel
-    ? "Confirmar reserva"
-    : "Confirmar turno"
-}
+            {
+              loading
+                ? "Procesando..."
+                : esLavadero
+                ? "Confirmar lavado"
+                : esFutbol5
+                ? "Confirmar reserva"
+                : esPadel
+                ? "Confirmar reserva"
+                : esBarberia
+                ? "Confirmar turno"
+                : "Confirmar turno"
+            }
 
           </button>
 
@@ -616,9 +662,6 @@ const generarHorarios = () => {
       </div>
 
     </div>
-
   );
-
 }
-
 
