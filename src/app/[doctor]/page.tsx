@@ -400,19 +400,13 @@ function Barberia() {
 
                   <div className="absolute bottom-6 left-6">
 
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-yellow-400">
-                      Servicio
-                    </p>
-
-                    <h3 className="mt-1 text-3xl font-bold">
+                    <h3 className="text-3xl font-bold">
                       {servicio.titulo}
                     </h3>
 
-                    {servicio.precio && (
-                      <p className="mt-1 text-xl font-semibold text-yellow-400">
-                        {servicio.precio}
-                      </p>
-                    )}
+                    <p className="mt-1 text-xl font-semibold text-yellow-400">
+                      {servicio.precio}
+                    </p>
 
                   </div>
 
@@ -467,9 +461,14 @@ function Barberia() {
                 Ubicación
               </p>
 
-              <p className="mt-1 font-semibold">
+              <a
+                href="https://www.google.com/maps/search/?api=1&query=Resistencia%2C%20Chaco"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-1 block font-semibold transition hover:text-yellow-400"
+              >
                 Resistencia, Chaco
-              </p>
+              </a>
 
             </div>
 
@@ -538,3 +537,4 @@ function Barberia() {
     </main>
   );
 }
+
