@@ -103,7 +103,7 @@ export default function BarberiaPanelPage() {
             <div>
 
               <p className="text-xs font-semibold uppercase tracking-[0.25em] text-yellow-500">
-                Black Barber
+                Barber
               </p>
 
               <h1 className="mt-1 text-2xl font-black tracking-tight sm:text-3xl">
@@ -440,7 +440,7 @@ export default function BarberiaPanelPage() {
 
           <MapPin className="h-3.5 w-3.5" />
 
-          <span>Black Barber · Resistencia, Chaco</span>
+          <span>Barber · Resistencia, Chaco</span>
 
         </div>
 
