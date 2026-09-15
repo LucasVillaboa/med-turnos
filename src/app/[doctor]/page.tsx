@@ -42,7 +42,7 @@ export default async function DoctorPage({ params }: Props) {
     futbol5: "Complejo Fútbol 5",
     consultorio: "Consultorio Médico",
     padel: "Canchas de Pádel",
-    barberia: "Black Barber",
+    barberia: "Barber",
   };
 
   const specialties: Record<string, string> = {
