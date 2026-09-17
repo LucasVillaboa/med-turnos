@@ -68,7 +68,7 @@ export default function BarberiaLoginPage() {
               </div>
 
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-yellow-500">
-                Black Barber
+                Barber
               </p>
 
               <h1 className="mt-3 text-3xl font-black tracking-tight">
@@ -247,7 +247,7 @@ export default function BarberiaLoginPage() {
             {/* PIE */}
 
             <p className="mt-7 text-center text-xs text-zinc-600">
-              Panel privado · Black Barber
+              Panel privado ·  Barber
             </p>
 
           </div>
