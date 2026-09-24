@@ -314,12 +314,13 @@ function Barberia() {
   src="/barberia.jpeg"
   alt="El Templo Barbería"
   className="
-    h-full
+    h-[115%]
     w-full
     object-contain
     object-center
     px-0
     py-0
+    md:h-full
     md:px-5
     md:py-8
   "
