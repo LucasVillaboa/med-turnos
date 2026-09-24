@@ -27,8 +27,8 @@ export default function BarberiaLoginPage() {
         doctor: string;
       }
     > = {
-      Barberia: {
-        password: "Barberia2026",
+      Eltemplo: {
+        password: "Eltemplo2026",
         doctor: "barberia",
       },
     };
