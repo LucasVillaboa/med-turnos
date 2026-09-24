@@ -306,9 +306,9 @@ function Barberia() {
 
         <div className="absolute right-[8%] top-[35%] h-40 w-40 rounded-full bg-yellow-500/5 blur-3xl" />
 
-        {/* LOGO */}
+        {/* LOGO / IMAGEN HERO */}
 
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center justify-center bg-black">
 
           <img
             src="/barberia.jpeg"
@@ -316,11 +316,12 @@ function Barberia() {
             className="
               h-full
               w-full
-              object-cover
+              object-contain
               object-center
-              px-5
-              py-8
-              scale-100 md:scale-[1.15] lg:scale-[1.05] xl:scale-100
+              px-2
+              py-2
+              md:px-5
+              md:py-8
             "
           />
 
@@ -511,7 +512,6 @@ function Barberia() {
             <h2 className="mt-3 text-3xl font-bold">
               Conoce a nuestros barberos.
             </h2>
-
 
           </div>
 
