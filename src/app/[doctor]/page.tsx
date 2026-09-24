@@ -12,7 +12,7 @@ const serviciosBarberia = [
   {
     imagen: "/corte-barberia.jpeg",
     alt: "Corte de cabello",
-    titulo: "Cortes",
+    titulo: "Corte",
     precio: "$15.000",
   },
   {
@@ -29,6 +29,25 @@ const serviciosBarberia = [
   },
 ];
 
+const barberos = [
+  {
+    nombre: "Lucas",
+    imagen: "/Lucas.jpeg",
+  },
+  {
+    nombre: "Agustín",
+    imagen: "/Agustin.jpeg",
+  },
+  {
+    nombre: "Felipe",
+    imagen: "/Felipe.jpeg",
+  },
+  {
+    nombre: "Demian",
+    imagen: "/Demian.jpeg",
+  },
+];
+
 export default async function DoctorPage({ params }: Props) {
   const { doctor } = await params;
 
@@ -42,7 +61,7 @@ export default async function DoctorPage({ params }: Props) {
     futbol5: "Complejo Fútbol 5",
     consultorio: "Consultorio Médico",
     padel: "Canchas de Pádel",
-    barberia: "Barber",
+    barberia: "El Templo",
   };
 
   const specialties: Record<string, string> = {
@@ -123,7 +142,7 @@ export default async function DoctorPage({ params }: Props) {
             <img
               src="/padel.jpeg"
               alt="Pádel"
-              className="w-48 h-48 object-cover rounded-3xl mx-auto mb-5 border-2 border-yellow-500 shadow-lg"
+              className="w-48 h-48 object-cover rounded-3xl mx-auto mb-5 border-2 border-blue-500 shadow-lg"
             />
           ) : (
             <img
@@ -273,41 +292,70 @@ function Barberia() {
   return (
     <main className="min-h-screen bg-zinc-950 text-white">
 
-      {/* HERO */}
+      {/* =========================
+          HERO
+      ========================= */}
 
-      <section className="relative h-[75vh] min-h-[560px] overflow-hidden">
+      <section className="relative h-[75vh] min-h-[560px] overflow-hidden bg-black">
 
-        <img
-          src="/barberia.jpeg"
-          alt="Barber"
-          className="absolute inset-0 h-full w-full object-cover object-[center_35%]"
-        />
+        {/* DETALLES DORADOS SUTILES DEL FONDO */}
 
-        <div className="absolute inset-0 bg-black/35" />
+        <div className="absolute left-1/2 top-[28%] h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-yellow-500/5 blur-3xl" />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-black/30 to-transparent" />
+        <div className="absolute left-[8%] top-[18%] h-32 w-32 rounded-full bg-yellow-600/5 blur-3xl" />
 
-        <div className="relative z-10 mx-auto flex h-full max-w-xl flex-col justify-end px-6 pb-12">
+        <div className="absolute right-[8%] top-[35%] h-40 w-40 rounded-full bg-yellow-500/5 blur-3xl" />
 
-          <span className="mb-5 w-fit rounded-full border border-yellow-500/50 bg-black/40 px-4 py-2 text-xs font-semibold tracking-[0.2em] text-yellow-400 backdrop-blur-md">
-            BARBER
-          </span>
+        {/* LOGO */}
 
-          <h1 className="text-5xl font-black leading-none tracking-tight sm:text-6xl">
-            Tu estilo.
-            <br />
-            Tu momento.
-          </h1>
+        <div className="absolute inset-0 flex items-center justify-center">
 
-          <p className="mt-5 max-w-md text-lg leading-relaxed text-zinc-300">
-            Cortes, barba y estilo personalizado en un espacio pensado
-            para vos.
+          <img
+            src="/barberia.jpeg"
+            alt="El Templo Barbería"
+            className="
+              h-full
+              w-full
+              object-cover
+              object-center
+              px-5
+              py-8
+              scale-100 md:scale-[1.15] lg:scale-[1.05] xl:scale-100
+            "
+          />
+
+        </div>
+
+        {/* SUAVE VIGNETTE */}
+
+        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/50" />
+
+        {/* TAGLINE */}
+
+        <div className="absolute inset-x-0 bottom-12 z-20 flex justify-center px-6">
+
+          <p
+            className="
+              text-center
+              font-serif
+              text-xl
+              italic
+              font-semibold
+              tracking-wide
+              text-yellow-400
+              drop-shadow-[0_3px_10px_rgba(0,0,0,0.95)]
+              sm:text-2xl
+            "
+          >
           </p>
 
         </div>
+
       </section>
 
-      {/* CONTENIDO */}
+      {/* =========================
+          CONTENIDO
+      ========================= */}
 
       <section className="mx-auto max-w-xl px-6 pb-12">
 
@@ -330,7 +378,9 @@ function Barberia() {
 
         </div>
 
-        {/* CARRUSEL */}
+        {/* =========================
+            CARRUSEL DE SERVICIOS
+        ========================= */}
 
         <div className="mt-8">
 
@@ -446,76 +496,210 @@ function Barberia() {
 
         </div>
 
-        {/* INFORMACIÓN */}
+        {/* =========================
+            NUESTRO EQUIPO
+        ========================= */}
 
-{/* INFORMACIÓN */}
+        <div className="mt-14">
 
-<div className="mt-8 rounded-3xl border border-zinc-800 bg-zinc-900 p-6">
+          <div className="mb-6">
 
-  <div className="flex items-start gap-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-yellow-500">
+              Nuestro equipo
+            </p>
 
-    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-yellow-500/20 bg-yellow-500/10">
-      <MapPin className="h-5 w-5 text-yellow-400" />
-    </div>
+            <h2 className="mt-3 text-3xl font-bold">
+              Conoce a nuestros barberos.
+            </h2>
 
-    <div>
 
-      <p className="text-xs uppercase tracking-wider text-zinc-500">
-        Ubicación
-      </p>
+          </div>
 
-      <a
-        href="https://www.google.com/maps/search/?api=1&query=Resistencia%2C%20Chaco"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mt-1 block font-semibold transition hover:text-yellow-400"
-      >
-        Resistencia, Chaco
-      </a>
+          {/* DESKTOP: 4 TARJETAS / MOBILE: SCROLL HORIZONTAL */}
 
-      <a
-        href="https://www.google.com/maps/search/?api=1&query=Resistencia%2C%20Chaco"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mt-2 inline-flex items-center gap-1.5 text-sm font-medium text-yellow-400 transition hover:text-yellow-300"
-      >
-        Abrir en Google Maps
-        <span className="text-base">↗</span>
-      </a>
+          <div
+            className="
+              flex
+              gap-4
+              overflow-x-auto
+              pb-3
+              snap-x
+              snap-mandatory
+              scrollbar-hide
+              md:grid
+              md:grid-cols-2
+              md:overflow-visible
+            "
+          >
 
-    </div>
+            {barberos.map((barbero) => (
 
-  </div>
+              <div
+                key={barbero.nombre}
+                className="
+                  min-w-[78%]
+                  snap-center
+                  overflow-hidden
+                  rounded-3xl
+                  border
+                  border-zinc-800
+                  bg-zinc-900
+                  shadow-xl
+                  md:min-w-0
+                "
+              >
 
-  <div className="my-5 h-px bg-zinc-800" />
+                <div className="aspect-[4/5] overflow-hidden bg-zinc-800">
 
-  <div className="flex items-start gap-4">
+                  <img
+                    src={barbero.imagen}
+                    alt={`Barbero ${barbero.nombre}`}
+                    draggable={false}
+                    className="
+                      h-full
+                      w-full
+                      object-cover
+                      transition
+                      duration-500
+                      hover:scale-105
+                    "
+                  />
 
-    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-800/80">
-      <Clock className="h-5 w-5 text-zinc-300" />
-    </div>
+                </div>
 
-    <div>
+                <div className="px-5 py-4">
 
-      <p className="text-xs uppercase tracking-wider text-zinc-500">
-        Horarios
-      </p>
+                  <p className="text-xs uppercase tracking-[0.2em] text-yellow-500">
+                    Barbero
+                  </p>
 
-      <p className="mt-1 font-semibold">
-        Lunes a sábado
-      </p>
+                  <h3 className="mt-1 text-2xl font-bold">
+                    {barbero.nombre}
+                  </h3>
 
-      <p className="mt-1 text-sm text-zinc-400">
-        09:00 a 20:00
-      </p>
+                </div>
 
-    </div>
+              </div>
 
-  </div>
+            ))}
 
-</div>
+          </div>
 
-        {/* CTA */}
+          {/* INDICACIÓN MOBILE */}
+
+          <div className="mt-4 flex justify-center gap-1.5 md:hidden">
+
+            {barberos.map((barbero, index) => (
+
+              <span
+                key={barbero.nombre}
+                className={`
+                  h-1.5
+                  rounded-full
+                  transition-all
+
+                  ${
+                    index === 0
+                      ? "w-6 bg-yellow-500"
+                      : "w-1.5 bg-zinc-700"
+                  }
+                `}
+              />
+
+            ))}
+
+          </div>
+
+        </div>
+
+        {/* =========================
+            INFORMACIÓN
+        ========================= */}
+
+        <div className="mt-12 rounded-3xl border border-zinc-800 bg-zinc-900 p-6">
+
+          {/* UBICACIÓN */}
+
+          <div className="flex items-start gap-4">
+
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-yellow-500/20 bg-yellow-500/10">
+              <MapPin className="h-5 w-5 text-yellow-400" />
+            </div>
+
+            <div>
+
+              <p className="text-xs uppercase tracking-wider text-zinc-500">
+                Ubicación
+              </p>
+
+              <a
+                href="https://maps.app.goo.gl/bMexJPiYsirPRTyM8?g_st=iw"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-1 block font-semibold transition hover:text-yellow-400"
+              >
+                Resistencia, Chaco
+              </a>
+
+              <a
+                href="https://maps.app.goo.gl/bMexJPiYsirPRTyM8?g_st=iw"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 inline-flex items-center gap-1.5 text-sm font-medium text-yellow-400 transition hover:text-yellow-300"
+              >
+                Como llegar
+                <span className="text-base">↗</span>
+              </a>
+
+            </div>
+
+          </div>
+
+          <div className="my-5 h-px bg-zinc-800" />
+
+          {/* HORARIOS */}
+
+          <div className="flex items-start gap-4">
+
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-800/80">
+              <Clock className="h-5 w-5 text-yellow-400" />
+            </div>
+
+            <div>
+
+              <p className="text-xs uppercase tracking-wider text-zinc-500">
+                Horarios
+              </p>
+
+              <p className="mt-1 font-semibold">
+                Lunes a sábado
+              </p>
+
+              <p className="mt-1 text-sm text-zinc-400">
+                09:00 a 22:00
+              </p>
+
+              <p className="mt-3 font-semibold">
+                Domingo
+              </p>
+
+              <p className="mt-1 text-sm text-zinc-400">
+                11:00 a 14:00
+              </p>
+
+              <p className="mt-1 text-sm text-zinc-400">
+                17:00 a 20:00
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        {/* =========================
+            CTA
+        ========================= */}
 
         <Link
           href="/barberia/reservar"
@@ -550,4 +734,6 @@ function Barberia() {
     </main>
   );
 }
+
+
 

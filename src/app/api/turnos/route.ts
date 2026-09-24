@@ -7,7 +7,6 @@ const supabase = createClient(
 );
 
 export async function GET(req: Request) {
-
   const { searchParams } = new URL(req.url);
 
   const doctor = searchParams.get("doctor");
@@ -16,23 +15,20 @@ export async function GET(req: Request) {
   let query = supabase
     .from("turnos")
     .select("*")
-    .eq("doctor", doctor);
+    .eq("doctor", doctor)
+    .order("created_at", { ascending: false });
 
   // 🔥 SOLO FILTRAR POR FECHA SI EXISTE
   if (fecha) {
-
     query = query.eq("fecha", fecha);
-
   }
 
   const { data, error } = await query;
 
   if (error) {
-
     return NextResponse.json([]);
-
   }
 
   return NextResponse.json(data);
-
 }
+

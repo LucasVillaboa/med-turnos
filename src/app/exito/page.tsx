@@ -41,16 +41,17 @@ export default function Exito() {
         </div>
 
         <h1 className="text-3xl font-bold text-green-600 mb-4">
-          Pago confirmado
+          ¡Reserva confirmada!
         </h1>
 
         <p className="text-slate-600 leading-relaxed">
           Tu turno fue reservado correctamente.
           <br />
-          Te enviamos un email con los detalles de la reserva.
+          ¡Te esperamos!
         </p>
 
       </div>
     </div>
   );
 }
+

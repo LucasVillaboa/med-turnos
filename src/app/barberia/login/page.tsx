@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  Scissors,
   User,
   Lock,
   Eye,
@@ -63,9 +62,21 @@ export default function BarberiaLoginPage() {
 
             <div className="relative">
 
-              <div className="mx-auto mb-5 flex h-24 w-24 items-center justify-center rounded-3xl border border-yellow-500/30 bg-yellow-500/10 shadow-[0_0_40px_rgba(234,179,8,0.08)]">
-                <Scissors className="h-11 w-11 text-yellow-400" />
-              </div>
+         <img
+  src="/barberia.jpeg"
+  alt="Black Barber"
+  className="
+    w-68
+    h-68
+    object-cover
+    rounded-3xl
+    mx-auto
+    mb-5
+    border-2
+    border-yellow-500
+    shadow-lg
+  "
+/>
 
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-yellow-500">
                 Barber
@@ -247,7 +258,7 @@ export default function BarberiaLoginPage() {
             {/* PIE */}
 
             <p className="mt-7 text-center text-xs text-zinc-600">
-              Panel privado ·  Barber
+              Panel privado · Barber
             </p>
 
           </div>

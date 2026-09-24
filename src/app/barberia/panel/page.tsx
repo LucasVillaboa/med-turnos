@@ -4,16 +4,20 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 import {
-  Scissors,
   LogOut,
   CalendarDays,
   CalendarCheck,
-  Wifi,
   Trash2,
   User,
   Phone,
   Clock,
-  MapPin,
+  Scissors,
+  Search,
+  History,
+  X,
+  Users,
+  DollarSign,
+  BarChart3,
 } from "lucide-react";
 
 const supabase = createClient(
@@ -21,39 +25,62 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
+type Turno = {
+  id: string;
+  nombre: string;
+  telefono: string;
+  fecha: string;
+  hora: string;
+  servicio?: string;
+  precio?: number;
+  barbero?: string;
+  created_at?: string;
+};
+
 export default function BarberiaPanelPage() {
   const router = useRouter();
 
-  const [turnos, setTurnos] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [turnos, setTurnos] = useState<Turno[]>([]);
+  const [cargando, setCargando] = useState(true);
+
+  const [busqueda, setBusqueda] = useState("");
+  const [clienteSeleccionado, setClienteSeleccionado] =
+    useState<Turno | null>(null);
+
+  const fechaActual = new Date();
+
+  const [mesSeleccionado, setMesSeleccionado] = useState(
+    `${fechaActual.getFullYear()}-${String(
+      fechaActual.getMonth() + 1
+    ).padStart(2, "0")}`
+  );
 
   useEffect(() => {
-    const auth = localStorage.getItem("auth");
-    const doctor = localStorage.getItem("doctor");
+    const cargarTurnos = async () => {
+      try {
+        const response = await fetch(
+          "/api/turnos?doctor=barberia"
+        );
 
-    if (!auth || doctor !== "barberia") {
-      router.push("/barberia/login");
-      return;
-    }
+        const data = await response.json();
 
-    obtenerTurnos();
+        if (Array.isArray(data)) {
+          setTurnos(data);
+        }
+      } catch (error) {
+        console.error("Error cargando turnos:", error);
+      } finally {
+        setCargando(false);
+      }
+    };
+
+    cargarTurnos();
   }, []);
 
-  const obtenerTurnos = async () => {
-    try {
-      const res = await fetch("/api/turnos?doctor=barberia");
-      const data = await res.json();
-
-      setTurnos(data);
-    } catch {
-      alert("Error al obtener reservas");
-    }
-
-    setLoading(false);
-  };
-
-  const eliminarTurno = async (id: number) => {
-    const confirmar = confirm("¿Eliminar reserva?");
+  const eliminarTurno = async (id: string) => {
+    const confirmar = window.confirm(
+      "¿Seguro que querés eliminar esta reserva?"
+    );
 
     if (!confirmar) return;
 
@@ -63,390 +90,689 @@ export default function BarberiaPanelPage() {
       .eq("id", id);
 
     if (error) {
-      alert("Error al eliminar");
+      console.error(error);
+      alert("No se pudo eliminar la reserva.");
       return;
     }
 
     setTurnos((prev) =>
-      prev.filter((t) => t.id !== id)
+      prev.filter((turno) => turno.id !== id)
     );
   };
 
   const cerrarSesion = () => {
-    localStorage.removeItem("auth");
-    localStorage.removeItem("doctor");
-
     router.push("/barberia/login");
   };
 
+  const formatearFecha = (fecha: string) => {
+    if (!fecha) return "-";
+
+    const partes = fecha.split("-");
+
+    if (partes.length !== 3) {
+      return fecha;
+    }
+
+    const [anio, mes, dia] = partes;
+
+    return `${dia}/${mes}/${anio}`;
+  };
+
+  const hoy = new Date();
+
+  const fechaHoy = `${hoy.getFullYear()}-${String(
+    hoy.getMonth() + 1
+  ).padStart(2, "0")}-${String(hoy.getDate()).padStart(
+    2,
+    "0"
+  )}`;
+
   const reservasHoy = turnos.filter(
-    (t) =>
-      t.fecha ===
-      new Date().toISOString().split("T")[0]
-  ).length;
+    (turno) => turno.fecha === fechaHoy
+  );
+
+  const turnosDelMes = turnos.filter((turno) =>
+    turno.fecha?.startsWith(mesSeleccionado)
+  );
+
+  const clientesDelMes = new Set(
+    turnosDelMes.map((turno) => turno.telefono)
+  ).size;
+
+  const cortesDelMes = turnosDelMes.reduce(
+    (total, turno) => {
+      const servicio = String(
+        turno.servicio || ""
+      ).toLowerCase();
+
+      return (
+        total +
+        (servicio.includes("corte") ? 1 : 0)
+      );
+    },
+    0
+  );
+
+  const barbasDelMes = turnosDelMes.reduce(
+    (total, turno) => {
+      const servicio = String(
+        turno.servicio || ""
+      ).toLowerCase();
+
+      return (
+        total +
+        (servicio.includes("barba") ? 1 : 0)
+      );
+    },
+    0
+  );
+
+  const cejasDelMes = turnosDelMes.reduce(
+    (total, turno) => {
+      const servicio = String(
+        turno.servicio || ""
+      ).toLowerCase();
+
+      return (
+        total +
+        (servicio.includes("ceja") ? 1 : 0)
+      );
+    },
+    0
+  );
+
+  const ingresosDelMes = turnosDelMes.reduce(
+    (total, turno) => {
+      return total + Number(turno.precio || 0);
+    },
+    0
+  );
+
+  const nombreMes = new Date(
+    `${mesSeleccionado}-01T12:00:00`
+  ).toLocaleDateString("es-AR", {
+    month: "long",
+    year: "numeric",
+  });
+
+  const clientesUnicos = Array.from(
+    new Map(
+      turnos.map((turno) => [
+        turno.telefono,
+        turno,
+      ])
+    ).values()
+  );
+
+  const clientesFiltrados = clientesUnicos.filter(
+    (cliente) => {
+      const texto = busqueda.toLowerCase();
+
+      return (
+        cliente.nombre
+          ?.toLowerCase()
+          .includes(texto) ||
+        cliente.telefono
+          ?.toLowerCase()
+          .includes(texto)
+      );
+    }
+  );
+
+  const historialCliente = clienteSeleccionado
+    ? turnos
+        .filter(
+          (turno) =>
+            turno.telefono ===
+            clienteSeleccionado.telefono
+        )
+        .sort((a, b) => {
+          const fechaA = `${a.fecha || ""} ${
+            a.hora || ""
+          }`;
+
+          const fechaB = `${b.fecha || ""} ${
+            b.hora || ""
+          }`;
+
+          return fechaB.localeCompare(fechaA);
+        })
+    : [];
+
+  const totalGastadoCliente =
+    historialCliente.reduce(
+      (total, turno) =>
+        total + Number(turno.precio || 0),
+      0
+    );
+
+  const turnosOrdenados = [...turnos].sort(
+    (a, b) => {
+      const fechaA = a.created_at
+        ? new Date(a.created_at).getTime()
+        : 0;
+
+      const fechaB = b.created_at
+        ? new Date(b.created_at).getTime()
+        : 0;
+
+      return fechaB - fechaA;
+    }
+  );
+
+  if (cargando) {
+    return (
+      <main className="min-h-screen bg-black text-white flex items-center justify-center">
+        <p className="text-zinc-400">
+          Cargando panel...
+        </p>
+      </main>
+    );
+  }
 
   return (
-    <main className="min-h-screen bg-zinc-950 text-white">
-
+    <main className="min-h-screen bg-black text-white">
       {/* HEADER */}
 
-      <header className="border-b border-zinc-800 bg-zinc-950/95 backdrop-blur">
+      <header className="border-b border-zinc-800 bg-zinc-950">
+        <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-4">
+              <img
+                src="/barberia.jpeg"
+                alt="Barbería"
+                className="h-14 w-14 rounded-full object-cover border border-yellow-500/40"
+              />
 
-        <div className="mx-auto flex max-w-7xl flex-col gap-5 px-6 py-6 md:flex-row md:items-center md:justify-between">
+              <div>
+                <h1 className="text-xl font-black">
+                  Panel de administración
+                </h1>
 
-          <div className="flex items-center gap-4">
-
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-yellow-500/30 bg-yellow-500/10">
-              <Scissors className="h-8 w-8 text-yellow-400" />
+                <p className="text-sm text-zinc-500">
+                  Barbería · Gestión de reservas
+                </p>
+              </div>
             </div>
 
-            <div>
-
-              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-yellow-500">
-                Barber
-              </p>
-
-              <h1 className="mt-1 text-2xl font-black tracking-tight sm:text-3xl">
-                Panel de administración
-              </h1>
-
-            </div>
-
+            <button
+              onClick={cerrarSesion}
+              className="flex items-center justify-center gap-2 rounded-xl border border-zinc-800 px-4 py-2 text-sm font-semibold text-zinc-300 transition hover:border-red-500/40 hover:text-red-400"
+            >
+              <LogOut className="h-4 w-4" />
+              Cerrar sesión
+            </button>
           </div>
-
-          <button
-            onClick={cerrarSesion}
-            className="
-              flex
-              min-h-[48px]
-              items-center
-              justify-center
-              gap-2
-              rounded-2xl
-              border
-              border-zinc-700
-              bg-zinc-900
-              px-5
-              font-semibold
-              text-zinc-300
-              transition
-              hover:border-red-500/40
-              hover:bg-red-500/10
-              hover:text-red-400
-            "
-          >
-            <LogOut className="h-5 w-5" />
-            Cerrar sesión
-          </button>
-
         </div>
-
       </header>
 
-      {/* CONTENIDO */}
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        {/* RESUMEN GENERAL */}
 
-      <div className="mx-auto max-w-7xl px-6 py-10">
+        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-2">
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-5">
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-zinc-500">
+                Total de reservas
+              </p>
 
-        {/* PRESENTACIÓN */}
-
-        <div className="mb-8">
-
-          <p className="text-sm text-zinc-500">
-            Resumen de actividad
-          </p>
-
-          <h2 className="mt-1 text-2xl font-bold">
-            Tus reservas
-          </h2>
-
-        </div>
-
-        {/* CARDS */}
-
-        <div className="mb-10 grid grid-cols-1 gap-5 md:grid-cols-3">
-
-          {/* RESERVAS TOTALES */}
-
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-900 p-6 shadow-xl">
-
-            <div className="flex items-start justify-between">
-
-              <div>
-
-                <p className="text-sm font-medium text-zinc-500">
-                  Reservas totales
-                </p>
-
-                <h2 className="mt-3 text-4xl font-black text-white">
-                  {turnos.length}
-                </h2>
-
-              </div>
-
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-yellow-500/10">
-                <CalendarCheck className="h-6 w-6 text-yellow-400" />
-              </div>
-
+              <CalendarDays className="h-5 w-5 text-yellow-500" />
             </div>
 
+            <p className="mt-3 text-3xl font-black">
+              {turnos.length}
+            </p>
           </div>
 
-          {/* RESERVAS HOY */}
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-5">
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-zinc-500">
+                Reservas hoy
+              </p>
 
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-900 p-6 shadow-xl">
-
-            <div className="flex items-start justify-between">
-
-              <div>
-
-                <p className="text-sm font-medium text-zinc-500">
-                  Reservas hoy
-                </p>
-
-                <h2 className="mt-3 text-4xl font-black text-white">
-                  {reservasHoy}
-                </h2>
-
-              </div>
-
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-yellow-500/10">
-                <CalendarDays className="h-6 w-6 text-yellow-400" />
-              </div>
-
+              <CalendarCheck className="h-5 w-5 text-yellow-500" />
             </div>
 
+            <p className="mt-3 text-3xl font-black">
+              {reservasHoy.length}
+            </p>
           </div>
+        </section>
 
-          {/* ESTADO */}
+        {/* RESUMEN MENSUAL */}
 
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-900 p-6 shadow-xl">
-
-            <div className="flex items-start justify-between">
-
-              <div>
-
-                <p className="text-sm font-medium text-zinc-500">
-                  Estado
-                </p>
-
-                <h2 className="mt-3 text-3xl font-black text-emerald-400">
-                  Online
-                </h2>
-
-              </div>
-
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/10">
-                <Wifi className="h-6 w-6 text-emerald-400" />
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-        {/* TABLA */}
-
-        <div className="overflow-hidden rounded-3xl border border-zinc-800 bg-zinc-900 shadow-2xl">
-
-          <div className="flex flex-col gap-2 border-b border-zinc-800 p-6 sm:flex-row sm:items-center sm:justify-between">
-
+        <section className="mt-8">
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-
-              <h2 className="text-2xl font-bold">
-                Reservas
+              <h2 className="text-xl font-black">
+                Resumen mensual
               </h2>
 
-              <p className="mt-1 text-sm text-zinc-500">
-                Turnos registrados en el sistema
+              <p className="text-sm capitalize text-zinc-500">
+                {nombreMes}
               </p>
-
             </div>
 
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-yellow-500/10">
-              <CalendarDays className="h-5 w-5 text-yellow-400" />
-            </div>
-
+            <input
+              type="month"
+              value={mesSeleccionado}
+              onChange={(e) =>
+                setMesSeleccionado(e.target.value)
+              }
+              className="rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 text-sm text-white outline-none focus:border-yellow-500"
+            />
           </div>
 
-          {loading ? (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
+            {/* TURNOS */}
 
-            <div className="flex flex-col items-center justify-center p-16 text-center">
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-5">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-zinc-500">
+                  Turnos
+                </p>
 
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-yellow-500/20 bg-yellow-500/10">
-                <CalendarDays className="h-6 w-6 animate-pulse text-yellow-400" />
+                <BarChart3 className="h-5 w-5 text-yellow-500" />
               </div>
 
-              <p className="text-zinc-400">
-                Cargando reservas...
+              <p className="mt-3 text-3xl font-black text-white">
+                {turnosDelMes.length}
               </p>
-
             </div>
 
-          ) : turnos.length === 0 ? (
+            {/* CLIENTES */}
 
-            <div className="flex flex-col items-center justify-center p-16 text-center">
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-5">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-zinc-500">
+                  Clientes
+                </p>
 
-              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-zinc-800">
-                <CalendarDays className="h-7 w-7 text-zinc-500" />
+                <Users className="h-5 w-5 text-yellow-500" />
               </div>
 
-              <h3 className="text-lg font-semibold">
-                No hay reservas todavía
-              </h3>
-
-              <p className="mt-1 text-sm text-zinc-500">
-                Cuando alguien reserve un turno aparecerá aquí.
+              <p className="mt-3 text-3xl font-black text-white">
+                {clientesDelMes}
               </p>
-
             </div>
 
-          ) : (
+            {/* CORTES */}
 
-            <div className="overflow-x-auto">
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-5">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-zinc-500">
+                  Cortes
+                </p>
 
-              <table className="w-full min-w-[760px]">
+                <Scissors className="h-5 w-5 text-yellow-500" />
+              </div>
 
-                <thead>
+              <p className="mt-3 text-3xl font-black text-white">
+                {cortesDelMes}
+              </p>
+            </div>
 
-                  <tr className="border-b border-zinc-800 bg-zinc-950/60">
+            {/* BARBAS */}
 
-                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500">
-                      Cliente
-                    </th>
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-5">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-zinc-500">
+                  Barbas
+                </p>
 
-                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500">
-                      Teléfono
-                    </th>
+                <Scissors className="h-5 w-5 text-yellow-500" />
+              </div>
 
-                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500">
-                      Fecha
-                    </th>
+              <p className="mt-3 text-3xl font-black text-white">
+                {barbasDelMes}
+              </p>
+            </div>
 
-                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500">
-                      Hora
-                    </th>
+            {/* CEJAS */}
 
-                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500">
-                      Acción
-                    </th>
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-5">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-zinc-500">
+                  Cejas
+                </p>
 
-                  </tr>
+                <Scissors className="h-5 w-5 text-yellow-500" />
+              </div>
 
-                </thead>
+              <p className="mt-3 text-3xl font-black text-white">
+                {cejasDelMes}
+              </p>
+            </div>
 
-                <tbody>
+            {/* INGRESOS */}
 
-                  {turnos.map((turno) => (
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-5">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-zinc-500">
+                  Ingresos
+                </p>
 
-                    <tr
-                      key={turno.id}
-                      className="border-b border-zinc-800/80 transition hover:bg-zinc-800/30"
-                    >
+                <DollarSign className="h-5 w-5 text-yellow-500" />
+              </div>
 
-                      <td className="px-6 py-5">
+              <p className="mt-3 text-3xl font-black text-white">
+                ${ingresosDelMes}
+              </p>
+            </div>
+          </div>
+        </section>
 
-                        <div className="flex items-center gap-3">
+        {/* HISTORIAL DE CLIENTES */}
 
-                          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-800">
-                            <User className="h-5 w-5 text-zinc-400" />
+        <section className="mt-8">
+          <div className="mb-4">
+            <h2 className="text-xl font-black">
+              Historial de clientes
+            </h2>
+
+            <p className="text-sm text-zinc-500">
+              Buscá un cliente por nombre o número de teléfono
+            </p>
+          </div>
+
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-500" />
+
+            <input
+              type="text"
+              value={busqueda}
+              onChange={(e) =>
+                setBusqueda(e.target.value)
+              }
+              placeholder="Buscar por nombre o teléfono..."
+              className="w-full rounded-xl border border-zinc-800 bg-zinc-950 py-3 pl-12 pr-4 text-sm text-white outline-none placeholder:text-zinc-600 focus:border-yellow-500"
+            />
+          </div>
+
+          {busqueda && (
+            <div className="mt-4 overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950">
+              {clientesFiltrados.length === 0 ? (
+                <div className="p-5 text-sm text-zinc-500">
+                  No se encontraron clientes.
+                </div>
+              ) : (
+                clientesFiltrados.map((cliente) => (
+                  <button
+                    key={cliente.telefono}
+                    onClick={() =>
+                      setClienteSeleccionado(cliente)
+                    }
+                    className="flex w-full items-center justify-between border-b border-zinc-800 px-5 py-4 text-left transition last:border-b-0 hover:bg-zinc-900"
+                  >
+                    <div>
+                      <p className="font-semibold text-white">
+                        {cliente.nombre}
+                      </p>
+
+                      <p className="text-sm text-zinc-500">
+                        {cliente.telefono}
+                      </p>
+                    </div>
+
+                    <History className="h-5 w-5 text-yellow-500" />
+                  </button>
+                ))
+              )}
+            </div>
+          )}
+        </section>
+
+        {/* TABLA DE RESERVAS */}
+
+        <section className="mt-8">
+          <div className="mb-4">
+            <h2 className="text-xl font-black">
+              Reservas
+            </h2>
+
+            <p className="text-sm text-zinc-500">
+              Todas las reservas de la barbería
+            </p>
+          </div>
+
+          <div className="overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950">
+            {turnosOrdenados.length === 0 ? (
+              <div className="p-8 text-center text-sm text-zinc-500">
+                No hay reservas todavía.
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[850px] text-left">
+                  <thead className="border-b border-zinc-800 bg-zinc-900/60">
+                    <tr>
+                      <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                        Cliente
+                      </th>
+
+                      <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                        Teléfono
+                      </th>
+
+                      <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                        Fecha
+                      </th>
+
+                      <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                        Hora
+                      </th>
+
+                      <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                        Servicio
+                      </th>
+
+                      <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                        Barbero
+                      </th>
+
+                      <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                        Precio
+                      </th>
+
+                      <th className="px-5 py-4 text-right text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                        Acción
+                      </th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {turnosOrdenados.map((turno) => (
+                      <tr
+                        key={turno.id}
+                        className="border-b border-zinc-800 last:border-b-0"
+                      >
+                        <td className="px-5 py-4">
+                          <div className="flex items-center gap-3">
+                            <User className="h-4 w-4 text-yellow-500" />
+
+                            <span className="font-medium text-white">
+                              {turno.nombre}
+                            </span>
                           </div>
+                        </td>
 
-                          <span className="font-medium text-zinc-200">
-                            {turno.nombre}
+                        <td className="px-5 py-4 text-sm text-zinc-400">
+                          <div className="flex items-center gap-2">
+                            <Phone className="h-4 w-4" />
+
+                            {turno.telefono}
+                          </div>
+                        </td>
+
+                        <td className="px-5 py-4 text-sm text-zinc-400">
+                          <div className="flex items-center gap-2">
+                            <CalendarDays className="h-4 w-4" />
+
+                            {formatearFecha(
+                              turno.fecha
+                            )}
+                          </div>
+                        </td>
+
+                        <td className="px-5 py-4 text-sm text-zinc-400">
+                          <div className="flex items-center gap-2">
+                            <Clock className="h-4 w-4" />
+
+                            {turno.hora}
+                          </div>
+                        </td>
+
+                        <td className="px-5 py-4 text-sm text-zinc-400">
+                          {turno.servicio || "-"}
+                        </td>
+
+                        <td className="px-5 py-4 text-sm text-zinc-400">
+                          {turno.barbero || "-"}
+                        </td>
+
+                        <td className="px-5 py-4 text-sm font-semibold text-white">
+                          ${turno.precio || 0}
+                        </td>
+
+                        <td className="px-5 py-4 text-right">
+                          <button
+                            onClick={() =>
+                              eliminarTurno(turno.id)
+                            }
+                            className="rounded-lg p-2 text-zinc-500 transition hover:bg-red-500/10 hover:text-red-400"
+                            title="Eliminar reserva"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </section>
+      </div>
+
+      {/* MODAL HISTORIAL CLIENTE */}
+
+      {clienteSeleccionado && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-2xl overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-zinc-800 px-5 py-4">
+              <div>
+                <h3 className="font-black text-white">
+                  Historial del cliente
+                </h3>
+
+                <p className="text-sm text-zinc-500">
+                  {clienteSeleccionado.nombre}
+                </p>
+              </div>
+
+              <button
+                onClick={() =>
+                  setClienteSeleccionado(null)
+                }
+                className="rounded-lg p-2 text-zinc-500 transition hover:bg-zinc-900 hover:text-white"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="max-h-[70vh] overflow-y-auto">
+              <div className="border-b border-zinc-800 bg-zinc-900/40 px-5 py-4">
+                <div className="grid gap-4 sm:grid-cols-3">
+                  <div>
+                    <p className="text-xs uppercase tracking-wider text-zinc-600">
+                      Teléfono
+                    </p>
+
+                    <p className="mt-1 text-sm font-semibold text-white">
+                      {clienteSeleccionado.telefono}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-xs uppercase tracking-wider text-zinc-600">
+                      Reservas
+                    </p>
+
+                    <p className="mt-1 text-sm font-semibold text-white">
+                      {historialCliente.length}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-xs uppercase tracking-wider text-zinc-600">
+                      Total gastado
+                    </p>
+
+                    <p className="mt-1 text-sm font-semibold text-yellow-500">
+                      ${totalGastadoCliente}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {historialCliente.length === 0 ? (
+                <div className="p-6 text-center text-sm text-zinc-500">
+                  No hay reservas para este cliente.
+                </div>
+              ) : (
+                <div className="divide-y divide-zinc-800">
+                  {historialCliente.map((turno) => (
+                    <div
+                      key={turno.id}
+                      className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between"
+                    >
+                      <div>
+                        <p className="font-semibold text-white">
+                          {turno.servicio || "Servicio"}
+                        </p>
+
+                        <div className="mt-1 flex flex-wrap gap-4 text-sm text-zinc-500">
+                          <span className="flex items-center gap-1.5">
+                            <CalendarDays className="h-4 w-4" />
+
+                            {formatearFecha(
+                              turno.fecha
+                            )}
                           </span>
 
-                        </div>
+                          <span className="flex items-center gap-1.5">
+                            <Clock className="h-4 w-4" />
 
-                      </td>
-
-                      <td className="px-6 py-5">
-
-                        <div className="flex items-center gap-2 text-zinc-400">
-
-                          <Phone className="h-4 w-4" />
-
-                          {turno.telefono}
-
-                        </div>
-
-                      </td>
-
-                      <td className="px-6 py-5 text-zinc-300">
-                        {turno.fecha}
-                      </td>
-
-                      <td className="px-6 py-5">
-
-                        <div className="flex items-center gap-2">
-
-                          <Clock className="h-4 w-4 text-yellow-500" />
-
-                          <span className="font-medium text-zinc-200">
                             {turno.hora}
                           </span>
 
+                          <span className="flex items-center gap-1.5">
+                            <Scissors className="h-4 w-4" />
+
+                            {turno.barbero || "-"}
+                          </span>
                         </div>
+                      </div>
 
-                      </td>
-
-                      <td className="px-6 py-5">
-
-                        <button
-                          onClick={() =>
-                            eliminarTurno(turno.id)
-                          }
-                          className="
-                            flex
-                            items-center
-                            gap-2
-                            rounded-xl
-                            border
-                            border-red-500/20
-                            bg-red-500/10
-                            px-4
-                            py-2.5
-                            font-semibold
-                            text-red-400
-                            transition
-                            hover:border-red-500/40
-                            hover:bg-red-500/20
-                            hover:text-red-300
-                          "
-                        >
-                          <Trash2 className="h-4 w-4" />
-                          Eliminar
-                        </button>
-
-                      </td>
-
-                    </tr>
-
+                      <p className="font-bold text-yellow-500">
+                        ${turno.precio || 0}
+                      </p>
+                    </div>
                   ))}
-
-                </tbody>
-
-              </table>
-
+                </div>
+              )}
             </div>
-
-          )}
-
+          </div>
         </div>
-
-        {/* FOOTER */}
-
-        <div className="mt-6 flex items-center justify-center gap-2 text-xs text-zinc-600">
-
-          <MapPin className="h-3.5 w-3.5" />
-
-          <span>Barber · Resistencia, Chaco</span>
-
-        </div>
-
-      </div>
-
+      )}
     </main>
   );
 }
+
+
+
+
+
+
+
 

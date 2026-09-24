@@ -17,19 +17,28 @@ export default function ReservarTurno() {
   const [form, setForm] = useState({
     nombre: "",
     telefono: "",
-    email: "",
     fecha: "",
     hora: "",
+    barbero: "",
+    servicio: "",
+    precio: 0,
   });
 
+  const [serviciosSeleccionados, setServiciosSeleccionados] = useState<
+    { nombre: string; precio: number }[]
+  >([]);
+
   const [horarios, setHorarios] = useState<string[]>([]);
-  const [ocupados, setOcupados] = useState<string[]>([]);
+  const [ocupados, setOcupados] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
+  // ==========================================
   // GENERAR HORARIOS
-  const generarHorarios = () => {
+  // ==========================================
 
-    const lista = [];
+  const generarHorarios = (fecha?: string) => {
+
+    const lista: string[] = [];
 
     if (esFutbol5) {
 
@@ -45,12 +54,31 @@ export default function ReservarTurno() {
 
     } else if (esBarberia) {
 
-      for (let h = 9; h <= 20; h++) {
+      if (fecha) {
 
-        lista.push(`${h}:00`);
+        const fechaSeleccionada = new Date(`${fecha}T00:00:00`);
+        const diaSemana = fechaSeleccionada.getDay();
 
-        if (h !== 20) {
-          lista.push(`${h}:30`);
+        // DOMINGO
+        if (diaSemana === 0) {
+
+          for (let h = 11; h <= 14; h++) {
+            lista.push(`${h}:00`);
+          }
+
+          for (let h = 17; h <= 20; h++) {
+            lista.push(`${h}:00`);
+          }
+
+        }
+
+        // LUNES A SÁBADO
+        else {
+
+          for (let h = 8; h <= 22; h++) {
+            lista.push(`${h}:00`);
+          }
+
         }
 
       }
@@ -72,7 +100,10 @@ export default function ReservarTurno() {
     return lista;
   };
 
+  // ==========================================
   // CAMBIO FECHA
+  // ==========================================
+
   const handleFechaChange = async (fecha: string) => {
 
     setForm({
@@ -81,7 +112,7 @@ export default function ReservarTurno() {
       hora: "",
     });
 
-    const lista = generarHorarios();
+    const lista = generarHorarios(fecha);
 
     setHorarios(lista);
 
@@ -93,9 +124,7 @@ export default function ReservarTurno() {
 
       const data = await res.json();
 
-      setOcupados(
-        data.map((t: any) => t.hora)
-      );
+      setOcupados(data);
 
     } catch {
 
@@ -105,7 +134,148 @@ export default function ReservarTurno() {
 
   };
 
+  // ==========================================
+  // CAMBIO DE BARBERO
+  // ==========================================
+
+  const handleBarberoChange = async (barbero: string) => {
+
+    setForm({
+      ...form,
+      barbero,
+      hora: "",
+    });
+
+    if (!form.fecha) {
+      return;
+    }
+
+    try {
+
+      const res = await fetch(
+        `/api/turnos?doctor=${doctor}&fecha=${form.fecha}`
+      );
+
+      const data = await res.json();
+
+      setOcupados(data);
+
+    } catch {
+
+      setOcupados([]);
+
+    }
+
+  };
+
+  // ==========================================
+  // CAMBIO DE SERVICIOS
+  // ==========================================
+
+  const handleServicioChange = (
+    servicio: string,
+    precio: number
+  ) => {
+
+    const yaSeleccionado = serviciosSeleccionados.some(
+      (item) => item.nombre === servicio
+    );
+
+    let nuevosServicios;
+
+    if (yaSeleccionado) {
+
+      nuevosServicios = serviciosSeleccionados.filter(
+        (item) => item.nombre !== servicio
+      );
+
+    } else {
+
+      nuevosServicios = [
+        ...serviciosSeleccionados,
+        {
+          nombre: servicio,
+          precio,
+        },
+      ];
+
+    }
+
+    const precioTotal = nuevosServicios.reduce(
+      (total, item) => total + item.precio,
+      0
+    );
+
+    const serviciosTexto = nuevosServicios
+      .map((item) => item.nombre)
+      .join(" + ");
+
+    setServiciosSeleccionados(nuevosServicios);
+
+    setForm({
+      ...form,
+      servicio: serviciosTexto,
+      precio: precioTotal,
+    });
+
+  };
+
+  // ==========================================
+  // VERIFICAR SI UN HORARIO ESTÁ OCUPADO
+  // ==========================================
+
+  const horarioOcupado = (hora: string) => {
+
+    // Servicios normales
+    if (!esBarberia) {
+
+      return ocupados.some(
+        (turno: any) => turno.hora === hora
+      );
+
+    }
+
+    // Si todavía no seleccionó barbero,
+    // no bloqueamos horarios
+    if (!form.barbero) {
+      return false;
+    }
+
+    // Barbero específico
+    if (form.barbero !== "Cualquier barbero") {
+
+      return ocupados.some(
+        (turno: any) =>
+          turno.hora === hora &&
+          turno.barbero === form.barbero
+      );
+
+    }
+
+    // Cualquier barbero:
+    // el horario se bloquea solamente cuando
+    // los 4 barberos están ocupados
+    const barberos = [
+      "Lucas",
+      "Agustin",
+      "Felipe",
+      "Demian",
+    ];
+
+    const barberosOcupados = ocupados
+      .filter((turno: any) => turno.hora === hora)
+      .map((turno: any) => turno.barbero);
+
+    return barberos.every(
+      (barbero) => barberosOcupados.includes(barbero)
+    );
+
+  };
+
+  // ==========================================
   // ENVIAR
+  // ==========================================
+
   const handleSubmit = async (e: any) => {
 
     e.preventDefault();
@@ -427,37 +597,233 @@ export default function ReservarTurno() {
             `}
           />
 
-          {/* EMAIL */}
-          <input
-            type="email"
-            placeholder="Email"
-            required
-            onChange={(e) =>
-              setForm({
-                ...form,
-                email: e.target.value,
-              })
-            }
-            className={`
-              w-full
-              min-h-[56px]
-              rounded-2xl
-              px-4
-              outline-none
-              transition
-              border
+          {/* SERVICIOS BARBERÍA */}
+          {
+            esBarberia && (
 
-              ${
-                esLavadero
-                  ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
-                  : esPadel
-                  ? "border-blue-300 text-slate-900 focus:border-blue-600"
-                  : esBarberia
-                  ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
-                  : "border-slate-300 text-slate-900 focus:border-emerald-600"
-              }
-            `}
-          />
+              <div>
+
+                <label
+                  className="
+                    block
+                    mb-3
+                    text-sm
+                    font-semibold
+                    text-yellow-400
+                  "
+                >
+                  Seleccioná uno o más servicios
+                </label>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+
+                  {/* CORTES */}
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleServicioChange("Corte", 15000)
+                    }
+                    className={`
+                      min-h-[72px]
+                      rounded-2xl
+                      border
+                      px-4
+                      text-left
+                      transition
+
+                      ${
+                        serviciosSeleccionados.some(
+                          (item) => item.nombre === "Corte"
+                        )
+                          ? "bg-yellow-500 text-black border-yellow-500"
+                          : "bg-zinc-900 text-yellow-300 border-zinc-700 hover:border-yellow-500"
+                      }
+                    `}
+                  >
+                    <div className="font-semibold">
+                      Corte
+                    </div>
+
+                    <div className="text-sm mt-1">
+                      $15.000
+                    </div>
+                  </button>
+
+                  {/* BARBA */}
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleServicioChange("Barba", 8000)
+                    }
+                    className={`
+                      min-h-[72px]
+                      rounded-2xl
+                      border
+                      px-4
+                      text-left
+                      transition
+
+                      ${
+                        serviciosSeleccionados.some(
+                          (item) => item.nombre === "Barba"
+                        )
+                          ? "bg-yellow-500 text-black border-yellow-500"
+                          : "bg-zinc-900 text-yellow-300 border-zinc-700 hover:border-yellow-500"
+                      }
+                    `}
+                  >
+                    <div className="font-semibold">
+                      Barba
+                    </div>
+
+                    <div className="text-sm mt-1">
+                      $8.000
+                    </div>
+                  </button>
+
+                  {/* PERFILADO */}
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleServicioChange(
+                        "Perfilado de cejas",
+                        5000
+                      )
+                    }
+                    className={`
+                      min-h-[72px]
+                      rounded-2xl
+                      border
+                      px-4
+                      text-left
+                      transition
+
+                      ${
+                        serviciosSeleccionados.some(
+                          (item) =>
+                            item.nombre === "Perfilado de cejas"
+                        )
+                          ? "bg-yellow-500 text-black border-yellow-500"
+                          : "bg-zinc-900 text-yellow-300 border-zinc-700 hover:border-yellow-500"
+                      }
+                    `}
+                  >
+                    <div className="font-semibold">
+                      Perfilado de cejas
+                    </div>
+
+                    <div className="text-sm mt-1">
+                      $5.000
+                    </div>
+                  </button>
+
+                </div>
+
+                {/* TOTAL */}
+
+                {serviciosSeleccionados.length > 0 && (
+
+                  <div className="
+                    mt-4
+                    flex
+                    items-center
+                    justify-between
+                    rounded-2xl
+                    border
+                    border-yellow-500/30
+                    bg-yellow-500/10
+                    px-5
+                    py-4
+                  ">
+
+                    <span className="font-semibold text-zinc-300">
+                      Total
+                    </span>
+
+                    <span className="text-xl font-black text-yellow-400">
+                      ${form.precio.toLocaleString("es-AR")}
+                    </span>
+
+                  </div>
+
+                )}
+
+              </div>
+
+            )
+          }
+
+          {/* BARBERO */}
+          {
+            esBarberia && (
+
+              <div>
+
+                <label
+                  className="
+                    block
+                    mb-2
+                    text-sm
+                    font-semibold
+                    text-yellow-400
+                  "
+                >
+                </label>
+
+                <select
+                  required
+                  value={form.barbero}
+                  onChange={(e) =>
+                    handleBarberoChange(e.target.value)
+                  }
+                  className="
+                    w-full
+                    min-h-[56px]
+                    rounded-2xl
+                    px-4
+                    outline-none
+                    transition
+                    border
+                    bg-zinc-900
+                    border-zinc-700
+                    text-zinc-400
+                    focus:border-yellow-500
+                  "
+                >
+
+                  <option value="" disabled>
+                    Seleccioná un barbero
+                  </option>
+
+                  <option value="Cualquier barbero">
+                    Cualquier barbero
+                  </option>
+
+                  <option value="Lucas">
+                    Lucas
+                  </option>
+
+                  <option value="Agustin">
+                    Agustin
+                  </option>
+
+                  <option value="Felipe">
+                    Felipe
+                  </option>
+
+                  <option value="Demian">
+                    Demian
+                  </option>
+
+                </select>
+
+              </div>
+
+            )
+          }
 
           {/* FECHA */}
           <div className="relative">
@@ -554,8 +920,7 @@ export default function ReservarTurno() {
                   {
                     horarios.map((h) => {
 
-                      const ocupado =
-                        ocupados.includes(h);
+                      const ocupado = horarioOcupado(h);
 
                       return (
 
@@ -619,7 +984,11 @@ export default function ReservarTurno() {
 
           {/* BOTON */}
           <button
-            disabled={!form.hora || loading}
+            disabled={
+              !form.hora ||
+              loading ||
+              (esBarberia && !form.servicio)
+            }
             className={`
               mt-6
               min-h-[58px]
@@ -664,4 +1033,10 @@ export default function ReservarTurno() {
     </div>
   );
 }
+
+
+
+
+
+
 
