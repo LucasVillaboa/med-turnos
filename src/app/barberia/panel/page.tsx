@@ -188,6 +188,112 @@ export default function BarberiaPanelPage() {
     0
   );
 
+  // =========================
+  // RESUMEN SEMANAL
+  // =========================
+
+  const inicioSemana = new Date(hoy);
+  const diaSemana = hoy.getDay();
+
+  // La semana comienza el lunes
+  const diferenciaDesdeLunes =
+    diaSemana === 0 ? 6 : diaSemana - 1;
+
+  inicioSemana.setDate(
+    hoy.getDate() - diferenciaDesdeLunes
+  );
+
+  inicioSemana.setHours(0, 0, 0, 0);
+
+  const finSemana = new Date(inicioSemana);
+  finSemana.setDate(inicioSemana.getDate() + 6);
+  finSemana.setHours(23, 59, 59, 999);
+
+  const fechaInicioSemana = `${inicioSemana.getFullYear()}-${String(
+    inicioSemana.getMonth() + 1
+  ).padStart(2, "0")}-${String(
+    inicioSemana.getDate()
+  ).padStart(2, "0")}`;
+
+  const fechaFinSemana = `${finSemana.getFullYear()}-${String(
+    finSemana.getMonth() + 1
+  ).padStart(2, "0")}-${String(
+    finSemana.getDate()
+  ).padStart(2, "0")}`;
+
+  const turnosDeLaSemana = turnos.filter(
+    (turno) =>
+      turno.fecha >= fechaInicioSemana &&
+      turno.fecha <= fechaFinSemana
+  );
+
+  const clientesDeLaSemana = new Set(
+    turnosDeLaSemana.map((turno) => turno.telefono)
+  ).size;
+
+  const cortesDeLaSemana = turnosDeLaSemana.reduce(
+    (total, turno) => {
+      const servicio = String(
+        turno.servicio || ""
+      ).toLowerCase();
+
+      return (
+        total +
+        (servicio.includes("corte") ? 1 : 0)
+      );
+    },
+    0
+  );
+
+  const barbasDeLaSemana = turnosDeLaSemana.reduce(
+    (total, turno) => {
+      const servicio = String(
+        turno.servicio || ""
+      ).toLowerCase();
+
+      return (
+        total +
+        (servicio.includes("barba") ? 1 : 0)
+      );
+    },
+    0
+  );
+
+  const cejasDeLaSemana = turnosDeLaSemana.reduce(
+    (total, turno) => {
+      const servicio = String(
+        turno.servicio || ""
+      ).toLowerCase();
+
+      return (
+        total +
+        (servicio.includes("ceja") ? 1 : 0)
+      );
+    },
+    0
+  );
+
+  const ingresosDeLaSemana = turnosDeLaSemana.reduce(
+    (total, turno) => {
+      return total + Number(turno.precio || 0);
+    },
+    0
+  );
+
+  const textoSemana = `${inicioSemana.toLocaleDateString(
+    "es-AR",
+    {
+      day: "2-digit",
+      month: "2-digit",
+    }
+  )} - ${finSemana.toLocaleDateString(
+    "es-AR",
+    {
+      day: "2-digit",
+      month: "2-digit",
+    }
+  )}`;
+
   const nombreMes = new Date(
     `${mesSeleccionado}-01T12:00:00`
   ).toLocaleDateString("es-AR", {
@@ -457,6 +563,118 @@ export default function BarberiaPanelPage() {
 
               <p className="mt-3 text-3xl font-black text-white">
                 ${ingresosDelMes}
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* RESUMEN SEMANAL */}
+
+        <section className="mt-8">
+          <div className="mb-4">
+            <h2 className="text-xl font-black">
+              Resumen semanal
+            </h2>
+
+            <p className="text-sm text-zinc-500">
+              Semana del {textoSemana}
+            </p>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
+            {/* TURNOS */}
+
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-5">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-zinc-500">
+                  Turnos
+                </p>
+
+                <BarChart3 className="h-5 w-5 text-yellow-500" />
+              </div>
+
+              <p className="mt-3 text-3xl font-black text-white">
+                {turnosDeLaSemana.length}
+              </p>
+            </div>
+
+            {/* CLIENTES */}
+
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-5">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-zinc-500">
+                  Clientes
+                </p>
+
+                <Users className="h-5 w-5 text-yellow-500" />
+              </div>
+
+              <p className="mt-3 text-3xl font-black text-white">
+                {clientesDeLaSemana}
+              </p>
+            </div>
+
+            {/* CORTES */}
+
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-5">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-zinc-500">
+                  Cortes
+                </p>
+
+                <Scissors className="h-5 w-5 text-yellow-500" />
+              </div>
+
+              <p className="mt-3 text-3xl font-black text-white">
+                {cortesDeLaSemana}
+              </p>
+            </div>
+
+            {/* BARBAS */}
+
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-5">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-zinc-500">
+                  Barbas
+                </p>
+
+                <Scissors className="h-5 w-5 text-yellow-500" />
+              </div>
+
+              <p className="mt-3 text-3xl font-black text-white">
+                {barbasDeLaSemana}
+              </p>
+            </div>
+
+            {/* CEJAS */}
+
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-5">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-zinc-500">
+                  Cejas
+                </p>
+
+                <Scissors className="h-5 w-5 text-yellow-500" />
+              </div>
+
+              <p className="mt-3 text-3xl font-black text-white">
+                {cejasDeLaSemana}
+              </p>
+            </div>
+
+            {/* INGRESOS */}
+
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-5">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-zinc-500">
+                  Ingresos
+                </p>
+
+                <DollarSign className="h-5 w-5 text-yellow-500" />
+              </div>
+
+              <p className="mt-3 text-3xl font-black text-white">
+                ${ingresosDeLaSemana}
               </p>
             </div>
           </div>
@@ -768,6 +986,8 @@ export default function BarberiaPanelPage() {
     </main>
   );
 }
+
+
 
 
 
