@@ -296,7 +296,7 @@ function Barberia() {
           HERO
       ========================= */}
 
-      <section className="relative h-[75vh] min-h-[560px] overflow-hidden bg-black">
+     <section className="relative h-[58vh] min-h-[430px] overflow-hidden bg-black sm:h-[65vh] sm:min-h-[500px] md:h-[75vh] md:min-h-[560px]">
 
         {/* DETALLES DORADOS SUTILES DEL FONDO */}
 
@@ -314,15 +314,15 @@ function Barberia() {
             src="/barberia.jpeg"
             alt="El Templo Barbería"
             className="
-              h-full
-              w-full
-              object-contain
-              object-center
-              px-2
-              py-2
-              md:px-5
-              md:py-8
-            "
+  h-full
+  w-full
+  object-contain
+  object-center
+  px-2
+  py-2
+  md:px-5
+  md:py-8
+"
           />
 
         </div>
