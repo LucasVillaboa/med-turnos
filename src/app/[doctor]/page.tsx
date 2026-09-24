@@ -296,7 +296,7 @@ function Barberia() {
           HERO
       ========================= */}
 
-     <section className="relative h-[68vh] min-h-[500px] overflow-hidden bg-black sm:h-[70vh] sm:min-h-[520px] md:h-[75vh] md:min-h-[560px]">
+     <section className="relative h-[78vh] min-h-[570px] overflow-hidden bg-black sm:h-[75vh] sm:min-h-[550px] md:h-[75vh] md:min-h-[560px]">
 
         {/* DETALLES DORADOS SUTILES DEL FONDO */}
 
