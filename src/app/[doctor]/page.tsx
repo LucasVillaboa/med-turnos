@@ -471,30 +471,27 @@ function Barberia() {
 
           {/* PUNTOS */}
 
-          <div className="mt-5 flex justify-center gap-2">
-
-            {serviciosBarberia.map((servicio, index) => (
-              <button
-                key={servicio.titulo}
-                type="button"
-                aria-label={`Ver ${servicio.titulo}`}
-                onClick={() => setActivo(index)}
-                className={`
-                  h-2.5
-                  rounded-full
-                  transition-all
-                  duration-300
-
-                  ${
-                    activo === index
-                      ? "w-7 bg-yellow-500"
-                      : "w-2.5 bg-zinc-700 hover:bg-zinc-500"
-                  }
-                `}
-              />
-            ))}
-
-          </div>
+<div className="mt-5 flex items-center justify-center gap-2">
+  {serviciosBarberia.map((servicio, index) => (
+    <button
+      key={servicio.titulo}
+      type="button"
+      aria-label={`Ver ${servicio.titulo}`}
+      onClick={() => setActivo(index)}
+      className={`
+        h-2.5
+        rounded-full
+        transition-all
+        duration-300
+        ${
+          activo === index
+            ? "w-8 bg-yellow-500"
+            : "w-2.5 bg-zinc-700"
+        }
+      `}
+    />
+  ))}
+</div>
 
         </div>
 
