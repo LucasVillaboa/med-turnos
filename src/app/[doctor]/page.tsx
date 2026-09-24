@@ -588,29 +588,11 @@ function Barberia() {
 
           {/* INDICACIÓN MOBILE */}
 
-          <div className="mt-4 flex justify-center gap-1.5 md:hidden">
-
-            {barberos.map((barbero, index) => (
-
-              <span
-                key={barbero.nombre}
-                className={`
-                  h-1.5
-                  rounded-full
-                  transition-all
-
-                  ${
-                    index === 0
-                      ? "w-6 bg-yellow-500"
-                      : "w-1.5 bg-zinc-700"
-                  }
-                `}
-              />
-
-            ))}
-
-          </div>
-
+          <div className="mt-4 flex items-center justify-center gap-2 text-xs font-medium text-zinc-500 md:hidden">
+  <span className="text-yellow-500">←</span>
+  <span>Deslizá para ver más barberos</span>
+  <span className="text-yellow-500">→</span>
+</div>
         </div>
 
         {/* =========================
