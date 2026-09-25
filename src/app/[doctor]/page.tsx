@@ -27,6 +27,12 @@ const serviciosBarberia = [
     titulo: "Perfilado de cejas",
     precio: "$3.000",
   },
+  {
+   imagen: "/corte-barba-barberia.jpeg",
+    alt: "Corte + Barba",
+    titulo: "Corte + Barba",
+    precio: "$15.000",
+  }
 ];
 
 const barberos = [
