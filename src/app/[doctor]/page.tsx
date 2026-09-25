@@ -446,12 +446,21 @@ function Barberia() {
                   `}
                 >
 
-                  <img
-                    src={servicio.imagen}
-                    alt={servicio.alt}
-                    draggable={false}
-                    className="h-full w-full object-cover"
-                  />
+            <img
+  src={servicio.imagen}
+  alt={servicio.alt}
+  draggable={false}
+  className={`
+    h-full
+    w-full
+    object-cover
+    ${
+      servicio.titulo === "Corte + Barba"
+        ? "object-[center_65%]"
+        : "object-center"
+    }
+  `}
+/>
 
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
 
