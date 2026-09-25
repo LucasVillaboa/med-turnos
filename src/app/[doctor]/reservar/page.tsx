@@ -278,62 +278,73 @@ export default function ReservarTurno() {
 
   const handleSubmit = async (e: any) => {
 
-    e.preventDefault();
+  e.preventDefault();
 
-    setLoading(true);
+  setLoading(true);
 
-    try {
+  try {
 
-      const res = await fetch("/api/confirmar", {
+    const res = await fetch("/api/confirmar", {
 
-        method: "POST",
+      method: "POST",
 
-        headers: {
-          "Content-Type": "application/json",
-        },
+      headers: {
+        "Content-Type": "application/json",
+      },
 
-        body: JSON.stringify({
-          ...form,
-          doctor,
-        }),
+      body: JSON.stringify({
+        ...form,
+        doctor,
+      }),
 
-      });
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (!res.ok) {
+    if (!res.ok) {
 
-        if (data.error === "Horario ocupado") {
+      if (data.error === "Horario ocupado") {
 
-          alert(
-            "Ese horario ya fue reservado."
-          );
+        alert(
+          "Ese horario ya fue reservado."
+        );
 
-          handleFechaChange(form.fecha);
+        handleFechaChange(form.fecha);
 
-        } else {
+      } else {
 
-          alert(data.error);
-
-        }
-
-        setLoading(false);
-
-        return;
+        alert(data.error);
 
       }
 
-      window.location.href = "/exito";
+      setLoading(false);
 
-    } catch {
-
-      alert("Ocurrió un error");
+      return;
 
     }
 
-    setLoading(false);
+    // Guardamos los datos del turno para mostrarlos
+    // en la pantalla de confirmación
+    localStorage.setItem(
+      "turno",
+      JSON.stringify({
+        ...form,
+        doctor,
+      })
+    );
 
-  };
+    // Vamos a la pantalla de confirmación
+    window.location.href = "/exito";
+
+  } catch {
+
+    alert("Ocurrió un error");
+
+  }
+
+  setLoading(false);
+
+};
 
   return (
 
