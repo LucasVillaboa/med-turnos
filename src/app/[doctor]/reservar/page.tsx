@@ -622,7 +622,7 @@ export default function ReservarTurno() {
                   <button
                     type="button"
                     onClick={() =>
-                      handleServicioChange("Corte", 15000)
+                      handleServicioChange("Corte", 13000)
                     }
                     className={`
                       min-h-[72px]
@@ -646,7 +646,7 @@ export default function ReservarTurno() {
                     </div>
 
                     <div className="text-sm mt-1">
-                      $15.000
+                      $13.000
                     </div>
                   </button>
 
@@ -655,7 +655,7 @@ export default function ReservarTurno() {
                   <button
                     type="button"
                     onClick={() =>
-                      handleServicioChange("Barba", 8000)
+                      handleServicioChange("Barba", 6000)
                     }
                     className={`
                       min-h-[72px]
@@ -679,7 +679,7 @@ export default function ReservarTurno() {
                     </div>
 
                     <div className="text-sm mt-1">
-                      $8.000
+                      $6.000
                     </div>
                   </button>
 
@@ -690,7 +690,7 @@ export default function ReservarTurno() {
                     onClick={() =>
                       handleServicioChange(
                         "Perfilado de cejas",
-                        5000
+                        3000
                       )
                     }
                     className={`
@@ -716,7 +716,7 @@ export default function ReservarTurno() {
                     </div>
 
                     <div className="text-sm mt-1">
-                      $5.000
+                      $3.000
                     </div>
                   </button>
 
