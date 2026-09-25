@@ -7,9 +7,8 @@ import {
   Clock3,
   UserRound,
   Scissors,
-  ArrowLeft,
 } from "lucide-react";
-import Link from "next/link";
+
 
 type Turno = {
   nombre?: string;
@@ -240,13 +239,6 @@ export default function Exito() {
             .
           </p>
 
-          <Link
-            href="/barberia"
-            className="inline-flex items-center justify-center gap-2 mt-6 w-full h-12 rounded-xl border border-[#333] bg-[#151515] text-sm font-medium text-gray-200 hover:border-[#c9a227]/50 hover:text-[#c9a227] transition"
-          >
-            <ArrowLeft size={17} />
-            Volver al inicio
-          </Link>
 
         </div>
 
