@@ -13,19 +13,19 @@ const serviciosBarberia = [
     imagen: "/corte-barberia.jpeg",
     alt: "Corte de cabello",
     titulo: "Corte",
-    precio: "$15.000",
+    precio: "$13.000",
   },
   {
     imagen: "/barba-barberia.jpeg",
     alt: "Barba",
     titulo: "Barba",
-    precio: "$8.000",
+    precio: "$6.000",
   },
   {
     imagen: "/perfilado-cejas-barberia.jpeg",
     alt: "Perfilado de cejas",
     titulo: "Perfilado de cejas",
-    precio: "$5.000",
+    precio: "$4.000",
   },
 ];
 
