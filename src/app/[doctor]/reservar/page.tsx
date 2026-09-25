@@ -720,6 +720,39 @@ export default function ReservarTurno() {
                     </div>
                   </button>
 
+                  {/* CORTE + BARBA */}
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleServicioChange("Corte + Barba", 15000)
+                    }
+                    className={`
+                      min-h-[72px]
+                      rounded-2xl
+                      border
+                      px-4
+                      text-left
+                      transition
+
+                      ${
+                        serviciosSeleccionados.some(
+                          (item) => item.nombre === "Corte + Barba"
+                        )
+                          ? "bg-yellow-500 text-black border-yellow-500"
+                          : "bg-zinc-900 text-yellow-300 border-zinc-700 hover:border-yellow-500"
+                      }
+                    `}
+                  >
+                    <div className="font-semibold">
+                      Corte + Barba
+                    </div>
+
+                    <div className="text-sm mt-1">
+                      $15.000
+                    </div>
+                  </button>
+
                 </div>
 
                 {/* TOTAL */}
