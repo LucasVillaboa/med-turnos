@@ -828,9 +828,6 @@ function Barberia() {
                 Instagram
               </p>
 
-              <p className="mt-1 font-semibold text-white">
-                Seguinos
-              </p>
             </div>
           </a>
 
