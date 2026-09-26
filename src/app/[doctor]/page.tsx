@@ -681,7 +681,7 @@ function Barberia() {
               </p>
 
               <p className="mt-1 text-sm text-zinc-400">
-                17:00 a 20:00
+                17:00 a 20:30
               </p>
 
             </div>
