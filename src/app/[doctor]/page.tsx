@@ -9,6 +9,24 @@ interface Props {
   params: Promise<{ doctor: string }>;
 }
 
+const serviciosBarberDemo = [
+  {
+    imagen: "/corte-barberia-demo.jpeg",
+    nombre: "Corte",
+    precio: "$15.000",
+  },
+  {
+    imagen: "/barba-barberia-demo.jpeg",
+    nombre: "Barba",
+    precio: "$8.000",
+  },
+  {
+    imagen: "/perfilado-cejas-barberia-demo.jpeg",
+    nombre: "Perfilado de cejas",
+    precio: "$5.000",
+  },
+];
+
 const serviciosBarberia = [
   {
     imagen: "/corte-barberia.jpeg",
@@ -62,6 +80,7 @@ export default async function DoctorPage({ params }: Props) {
   const esFutbol5 = doctor === "futbol5";
   const esPadel = doctor === "padel";
   const esBarberia = doctor === "barberia";
+  const esBarberDemo = doctor === "barber";
 
   const doctors: Record<string, string> = {
     lavadero: "Lavadero",
@@ -86,6 +105,10 @@ export default async function DoctorPage({ params }: Props) {
   if (esBarberia) {
     return <Barberia />;
   }
+
+if (esBarberDemo) {
+  return <BarberDemo />;
+}
 
   /* =========================
      RESTO DE LOS RUBROS
@@ -873,3 +896,560 @@ function Barberia() {
 
 
 
+
+
+
+function BarberDemo() {
+  const [activo, setActivo] = useState(0);
+  const [inicioX, setInicioX] = useState<number | null>(null);
+
+  /* CAMBIO AUTOMÁTICO */
+  useEffect(() => {
+    const intervalo = setInterval(() => {
+      setActivo((actual) => (actual + 1) % serviciosBarberDemo.length);
+    }, 4000);
+
+    return () => clearInterval(intervalo);
+  }, []);
+
+  /* DESLIZAMIENTO */
+  const comenzarDeslizamiento = (x: number) => {
+    setInicioX(x);
+  };
+
+  const terminarDeslizamiento = (x: number) => {
+    if (inicioX === null) return;
+
+    const diferencia = inicioX - x;
+
+    if (Math.abs(diferencia) > 50) {
+      if (diferencia > 0) {
+        setActivo((actual) => (actual + 1) % serviciosBarberDemo.length);
+      } else {
+        setActivo(
+          (actual) =>
+            (actual - 1 + serviciosBarberDemo.length) %
+            serviciosBarberDemo.length
+        );
+      }
+    }
+
+    setInicioX(null);
+  };
+
+  return (
+    <main className="min-h-screen bg-zinc-950 text-white">
+
+{/* =========================
+    HERO
+========================= */}
+
+<section className="relative flex w-full items-center justify-center overflow-hidden bg-black">
+
+  <div className="flex h-[70vh] w-full items-center justify-center md:h-[calc(100vh-80px)]">
+    <img
+      src="/barber-demo.jpeg"
+      alt="Barbería"
+      className="
+        block
+        h-full
+        w-full
+        object-contain
+      "
+    />
+  </div>
+
+  {/* VIGNETTE */}
+  <div
+    className="
+      pointer-events-none
+      absolute
+      inset-0
+      bg-gradient-to-b
+      from-black/15
+      via-transparent
+      to-black/65
+    "
+  />
+
+  {/* TITULO */}
+  <div
+    className="
+      absolute
+      inset-x-0
+      bottom-6
+      z-20
+      flex
+      justify-center
+      px-4
+      sm:bottom-8
+      md:bottom-10
+    "
+  >
+    <div
+      className="
+        rounded-full
+        border
+        border-yellow-500/40
+        bg-black/60
+        px-5
+        py-2
+        text-xs
+        font-bold
+        tracking-[0.3em]
+        text-yellow-400
+        backdrop-blur-sm
+        sm:px-6
+        sm:py-2.5
+        sm:text-sm
+      "
+    >
+      BARBERÍA
+    </div>
+  </div>
+
+</section>
+
+
+      {/* =========================
+          CONTENIDO
+      ========================= */}
+
+      <section className="mx-auto max-w-xl px-6 pb-12">
+
+
+        {/* =========================
+            PRESENTACIÓN
+        ========================= */}
+
+        <div className="pt-10">
+
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-yellow-500">
+            Nuestra barbería
+          </p>
+
+          <h2 className="mt-3 text-3xl font-bold">
+            Estilo que habla por vos.
+          </h2>
+
+          <p className="mt-4 leading-relaxed text-zinc-400">
+            Elegí el servicio que querés, seleccioná el día y encontrá
+            rápidamente un horario disponible.
+          </p>
+
+        </div>
+
+
+        {/* =========================
+            CARRUSEL DE SERVICIOS
+        ========================= */}
+
+        <div className="mt-8">
+
+          <div
+            className="relative h-[300px] touch-pan-y select-none"
+            onMouseDown={(e) => comenzarDeslizamiento(e.clientX)}
+            onMouseUp={(e) => terminarDeslizamiento(e.clientX)}
+            onMouseLeave={(e) => terminarDeslizamiento(e.clientX)}
+            onTouchStart={(e) =>
+              comenzarDeslizamiento(e.touches[0].clientX)
+            }
+            onTouchEnd={(e) =>
+              terminarDeslizamiento(e.changedTouches[0].clientX)
+            }
+          >
+
+            {serviciosBarberDemo.map((servicio, index) => {
+
+              let posicion = index - activo;
+
+              if (posicion < -1) {
+                posicion += serviciosBarberDemo.length;
+              }
+
+              if (posicion > 1) {
+                posicion -= serviciosBarberDemo.length;
+              }
+
+              const esActivo = posicion === 0;
+              const esAnterior = posicion === -1;
+              const esSiguiente = posicion === 1;
+
+              return (
+                <div
+                  key={servicio.imagen}
+                  className={`
+                    absolute
+                    left-0
+                    top-0
+                    h-full
+                    w-full
+                    overflow-hidden
+                    rounded-3xl
+                    transition-all
+                    duration-700
+                    ease-out
+
+                    ${
+                      esActivo
+                        ? "z-30 translate-x-0 scale-100 opacity-100"
+                        : esSiguiente
+                        ? "z-20 translate-x-[12%] scale-[0.92] opacity-70"
+                        : esAnterior
+                        ? "z-20 -translate-x-[12%] scale-[0.92] opacity-70"
+                        : "z-0 scale-75 opacity-0"
+                    }
+                  `}
+                >
+
+                  <img
+                    src={servicio.imagen}
+                    alt={servicio.nombre}
+                    draggable={false}
+                    className="
+                      h-full
+                      w-full
+                      object-cover
+                      object-center
+                    "
+                  />
+
+
+                  {/* DEGRADADO */}
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+
+
+                  {/* INFORMACIÓN DEL SERVICIO */}
+
+
+<div className="absolute bottom-6 left-6">
+
+  <p className="text-3xl font-bold text-white">
+    {servicio.nombre}
+  </p>
+
+  <p className="mt-1 text-xl font-semibold text-yellow-400">
+    {servicio.precio}
+  </p>
+
+</div>
+
+                </div>
+              );
+            })}
+
+          </div>
+
+
+          {/* PUNTOS */}
+
+          <div className="mt-5 flex items-center justify-center gap-2">
+
+            {serviciosBarberDemo.map((servicio, index) => (
+
+              <button
+                key={servicio.nombre}
+                type="button"
+                aria-label={`Ver ${servicio.nombre}`}
+                onClick={() => setActivo(index)}
+                className={`
+                  h-2.5
+                  rounded-full
+                  transition-all
+                  duration-300
+
+                  ${
+                    activo === index
+                      ? "w-8 bg-yellow-500"
+                      : "w-2.5 bg-zinc-700"
+                  }
+                `}
+              />
+
+            ))}
+
+          </div>
+
+        </div>
+
+
+        {/* =========================
+            INFORMACIÓN
+        ========================= */}
+
+        <div className="mt-12 rounded-3xl border border-zinc-800 bg-zinc-900 p-6">
+
+
+          {/* UBICACIÓN */}
+
+          <div className="flex items-start gap-4">
+
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-yellow-500/20 bg-yellow-500/10">
+
+              <MapPin className="h-5 w-5 text-yellow-400" />
+
+            </div>
+
+            <div>
+
+              <p className="text-xs uppercase tracking-wider text-zinc-500">
+                Ubicación
+              </p>
+
+              <p className="mt-1 font-semibold">
+                Resistencia, Chaco
+              </p>
+
+              <a
+                href="https://www.google.com/maps/search/?api=1&query=barberia+Resistencia+Chaco"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="
+                  mt-2
+                  inline-flex
+                  items-center
+                  gap-1.5
+                  text-sm
+                  font-medium
+                  text-yellow-400
+                  transition
+                  hover:text-yellow-300
+                "
+              >
+                Ver ubicación
+                <span className="text-base">↗</span>
+              </a>
+
+            </div>
+
+          </div>
+
+
+          <div className="my-5 h-px bg-zinc-800" />
+
+
+          {/* HORARIOS */}
+
+          <div className="flex items-start gap-4">
+
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-800/80">
+
+              <Clock className="h-5 w-5 text-yellow-400" />
+
+            </div>
+
+            <div>
+
+              <p className="text-xs uppercase tracking-wider text-zinc-500">
+                Horarios
+              </p>
+
+              <p className="mt-1 font-semibold">
+                Lunes a sábado
+              </p>
+
+              <p className="mt-1 text-sm text-zinc-400">
+                09:00 a 22:00
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        {/* =========================
+            REDES SOCIALES
+        ========================= */}
+
+        <div className="mt-6 grid grid-cols-2 gap-3">
+
+
+          {/* WHATSAPP */}
+
+          <a
+            href="#"
+            className="
+              group
+              flex
+              min-h-[76px]
+              items-center
+              justify-center
+              gap-3
+              rounded-2xl
+              border
+              border-zinc-800
+              bg-zinc-900
+              px-4
+              transition
+              hover:border-yellow-500/40
+              hover:bg-zinc-800
+              active:scale-[0.98]
+            "
+          >
+
+            <div
+              className="
+                flex
+                h-11
+                w-11
+                shrink-0
+                items-center
+                justify-center
+                rounded-full
+                bg-[#25D366]/10
+                transition
+                group-hover:bg-[#25D366]/20
+              "
+            >
+
+              <svg
+                viewBox="0 0 24 24"
+                className="h-6 w-6 fill-[#25D366]"
+                aria-hidden="true"
+              >
+
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.372.298-.497.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.372-.01-.57-.01-.198 0-.52.075-.792.372-.272.298-1.04 1.016-1.04 2.479 0 1.462 1.065 2.876 1.213 3.074.149.198 2.095 3.2 5.077 4.487.709.306 1.262.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982 1-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.437-9.884 9.893-9.884 2.64 0 5.122 1.03 6.986 2.895a9.825 9.825 0 012.892 6.99c-.002 5.45-4.438 9.891-9.889 9.891m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.89c0 2.096.547 4.142 1.588 5.945L.057 24l6.304-1.654a11.933 11.933 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.89a11.821 11.821 0 00-3.478-8.416"/>
+              
+              </svg>
+
+            </div>
+
+            <div>
+
+              <p className="text-xs uppercase tracking-wider text-zinc-500">
+                WhatsApp
+              </p>
+
+            </div>
+
+          </a>
+
+
+          {/* INSTAGRAM */}
+
+          <a
+            href="#"
+            className="
+              group
+              flex
+              min-h-[76px]
+              items-center
+              justify-center
+              gap-3
+              rounded-2xl
+              border
+              border-zinc-800
+              bg-zinc-900
+              px-4
+              transition
+              hover:border-yellow-500/40
+              hover:bg-zinc-800
+              active:scale-[0.98]
+            "
+          >
+
+            <div
+              className="
+                flex
+                h-11
+                w-11
+                shrink-0
+                items-center
+                justify-center
+                rounded-full
+                bg-gradient-to-br
+                from-[#f58529]/10
+                via-[#dd2a7b]/10
+                to-[#8134af]/10
+                transition
+                group-hover:from-[#f58529]/20
+                group-hover:via-[#dd2a7b]/20
+                group-hover:to-[#8134af]/20
+              "
+            >
+
+              <svg
+                viewBox="0 0 24 24"
+                className="h-6 w-6 fill-none stroke-[#E1306C]"
+                strokeWidth="1.8"
+                aria-hidden="true"
+              >
+
+                <rect
+                  x="3"
+                  y="3"
+                  width="18"
+                  height="18"
+                  rx="5"
+                />
+
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="4"
+                />
+
+                <circle
+                  cx="17.5"
+                  cy="6.5"
+                  r="1"
+                  className="fill-[#E1306C] stroke-none"
+                />
+
+              </svg>
+
+            </div>
+
+            <div>
+
+              <p className="text-xs uppercase tracking-wider text-zinc-500">
+                Instagram
+              </p>
+
+            </div>
+
+          </a>
+
+        </div>
+
+
+        {/* =========================
+            CTA
+        ========================= */}
+
+        <Link
+          href="/barber/reservar"
+          className="
+            mt-8
+            flex
+            min-h-[64px]
+            w-full
+            items-center
+            justify-center
+            rounded-2xl
+            bg-yellow-500
+            px-6
+            text-lg
+            font-bold
+            text-black
+            shadow-[0_10px_40px_rgba(234,179,8,0.18)]
+            transition
+            hover:bg-yellow-400
+            active:scale-[0.98]
+          "
+        >
+          Reservar mi turno
+        </Link>
+
+        <p className="mt-5 text-center text-xs text-zinc-600">
+          Reservá online de forma rápida y sencilla
+        </p>
+
+      </section>
+
+    </main>
+  );
+}

@@ -13,6 +13,9 @@ export default function ReservarTurno() {
   const esFutbol5 = doctor === "futbol5";
   const esPadel = doctor === "padel";
   const esBarberia = doctor === "barberia";
+  const esBarberDemo = doctor === "barber";
+
+  const esCualquierBarberia = esBarberia || esBarberDemo;
 
   const [form, setForm] = useState({
     nombre: "",
@@ -52,7 +55,7 @@ export default function ReservarTurno() {
         lista.push(`${h}:00`);
       }
 
-    } else if (esBarberia) {
+    } else if (esCualquierBarberia) {
 
       if (fecha) {
 
@@ -225,52 +228,43 @@ export default function ReservarTurno() {
   // ==========================================
 
   const horarioOcupado = (hora: string) => {
-
-    // Servicios normales
-    if (!esBarberia) {
-
-      return ocupados.some(
-        (turno: any) => turno.hora === hora
-      );
-
-    }
-
-    // Si todavía no seleccionó barbero,
-    // no bloqueamos horarios
-    if (!form.barbero) {
-      return false;
-    }
-
-    // Barbero específico
-    if (form.barbero !== "Cualquier barbero") {
-
-      return ocupados.some(
-        (turno: any) =>
-          turno.hora === hora &&
-          turno.barbero === form.barbero
-      );
-
-    }
-
-    // Cualquier barbero:
-    // el horario se bloquea solamente cuando
-    // los 4 barberos están ocupados
-    const barberos = [
-      "Lucas",
-      "Agustin",
-      "Felipe",
-      "Demian",
-    ];
-
-    const barberosOcupados = ocupados
-      .filter((turno: any) => turno.hora === hora)
-      .map((turno: any) => turno.barbero);
-
-    return barberos.every(
-      (barbero) => barberosOcupados.includes(barbero)
+  // Demo de barbería: controla únicamente
+  // los turnos que pertenecen a "barber"
+  if (esBarberDemo) {
+    return ocupados.some(
+      (turno: any) => turno.hora === hora
     );
+  }
 
-  };
+  // El Templo y el resto de rubros
+  if (!esCualquierBarberia) {
+    return ocupados.some(
+      (turno: any) => turno.hora === hora
+    );
+  }
+
+  if (!form.barbero) {
+    return false;
+  }
+
+  if (form.barbero !== "Cualquier barbero") {
+    return ocupados.some(
+      (turno: any) =>
+        turno.hora === hora &&
+        turno.barbero === form.barbero
+    );
+  }
+
+  const barberos = ["Lucas", "Agustin", "Felipe", "Demian"];
+
+  return barberos.every((barbero) =>
+    ocupados.some(
+      (turno: any) =>
+        turno.hora === hora &&
+        turno.barbero === barbero
+    )
+  );
+};
 
   // ==========================================
   // ENVIAR
@@ -278,73 +272,73 @@ export default function ReservarTurno() {
 
   const handleSubmit = async (e: any) => {
 
-  e.preventDefault();
+    e.preventDefault();
 
-  setLoading(true);
+    setLoading(true);
 
-  try {
+    try {
 
-    const res = await fetch("/api/confirmar", {
+      const res = await fetch("/api/confirmar", {
 
-      method: "POST",
+        method: "POST",
 
-      headers: {
-        "Content-Type": "application/json",
-      },
+        headers: {
+          "Content-Type": "application/json",
+        },
 
-      body: JSON.stringify({
-        ...form,
-        doctor,
-      }),
+        body: JSON.stringify({
+          ...form,
+          doctor,
+        }),
 
-    });
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (!res.ok) {
+      if (!res.ok) {
 
-      if (data.error === "Horario ocupado") {
+        if (data.error === "Horario ocupado") {
 
-        alert(
-          "Ese horario ya fue reservado."
-        );
+          alert(
+            "Ese horario ya fue reservado."
+          );
 
-        handleFechaChange(form.fecha);
+          handleFechaChange(form.fecha);
 
-      } else {
+        } else {
 
-        alert(data.error);
+          alert(data.error);
+
+        }
+
+        setLoading(false);
+
+        return;
 
       }
 
-      setLoading(false);
+      // Guardamos los datos del turno para mostrarlos
+      // en la pantalla de confirmación
+      localStorage.setItem(
+        "turno",
+        JSON.stringify({
+          ...form,
+          doctor,
+        })
+      );
 
-      return;
+      // Vamos a la pantalla de confirmación
+      window.location.href = "/exito";
+
+    } catch {
+
+      alert("Ocurrió un error");
 
     }
 
-    // Guardamos los datos del turno para mostrarlos
-    // en la pantalla de confirmación
-    localStorage.setItem(
-      "turno",
-      JSON.stringify({
-        ...form,
-        doctor,
-      })
-    );
+    setLoading(false);
 
-    // Vamos a la pantalla de confirmación
-    window.location.href = "/exito";
-
-  } catch {
-
-    alert("Ocurrió un error");
-
-  }
-
-  setLoading(false);
-
-};
+  };
 
   return (
 
@@ -362,7 +356,7 @@ export default function ReservarTurno() {
             ? "bg-black"
             : esPadel
             ? "bg-blue-50"
-            : esBarberia
+            : esCualquierBarberia
             ? "bg-zinc-950"
             : "bg-slate-50"
         }
@@ -384,7 +378,7 @@ export default function ReservarTurno() {
               ? "bg-zinc-950 border-yellow-500/20"
               : esPadel
               ? "bg-white border-blue-300"
-              : esBarberia
+              : esCualquierBarberia
               ? "bg-black border-yellow-500/30"
               : "bg-white border-slate-200"
           }
@@ -449,10 +443,14 @@ export default function ReservarTurno() {
                 "
               />
 
-            ) : esBarberia ? (
+            ) : esCualquierBarberia ? (
 
               <img
-                src="/barberia.jpeg"
+                src={
+                  esBarberDemo
+                    ? "/barber-demo.jpeg"
+                    : "/barberia.jpeg"
+                }
                 alt="Black Barber"
                 className="
                   w-68
@@ -499,7 +497,7 @@ export default function ReservarTurno() {
                   ? "text-yellow-400"
                   : esPadel
                   ? "text-blue-700"
-                  : esBarberia
+                  : esCualquierBarberia
                   ? "text-yellow-400"
                   : "text-slate-800"
               }
@@ -512,7 +510,7 @@ export default function ReservarTurno() {
                 ? "Reservá tu cancha"
                 : esPadel
                 ? "Reservá tu cancha"
-                : esBarberia
+                : esCualquierBarberia
                 ? "Reservá tu turno"
                 : "Reservá tu turno"
             }
@@ -527,7 +525,7 @@ export default function ReservarTurno() {
                   ? "text-zinc-400"
                   : esPadel
                   ? "text-blue-600"
-                  : esBarberia
+                  : esCualquierBarberia
                   ? "text-zinc-400"
                   : "text-slate-500"
               }
@@ -569,7 +567,7 @@ export default function ReservarTurno() {
                   ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
                   : esPadel
                   ? "border-blue-300 text-slate-900 focus:border-blue-600"
-                  : esBarberia
+                  : esCualquierBarberia
                   ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
                   : "border-slate-300 text-slate-900 focus:border-emerald-600"
               }
@@ -601,7 +599,7 @@ export default function ReservarTurno() {
                   ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
                   : esPadel
                   ? "border-blue-300 text-slate-900 focus:border-blue-600"
-                  : esBarberia
+                  : esCualquierBarberia
                   ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
                   : "border-slate-300 text-slate-900 focus:border-emerald-600"
               }
@@ -610,7 +608,7 @@ export default function ReservarTurno() {
 
           {/* SERVICIOS BARBERÍA */}
           {
-            esBarberia && (
+            esCualquierBarberia && (
 
               <div>
 
@@ -893,14 +891,14 @@ export default function ReservarTurno() {
                     ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
                     : esPadel
                     ? "border-blue-300 text-slate-900 focus:border-blue-600"
-                    : esBarberia
+                    : esCualquierBarberia
                     ? "bg-zinc-900 border-zinc-700 text-white focus:border-yellow-500"
                     : "border-slate-300 text-slate-900 focus:border-emerald-600"
                 }
               `}
               style={{
                 color: form.fecha
-                  ? esLavadero || esBarberia
+                  ? esLavadero || esCualquierBarberia
                     ? "white"
                     : "#0f172a"
                   : "transparent",
@@ -919,7 +917,7 @@ export default function ReservarTurno() {
                     text-sm
 
                     ${
-                      esLavadero || esBarberia
+                      esLavadero || esCualquierBarberia
                         ? "text-zinc-400"
                         : esPadel
                         ? "text-blue-400"
@@ -950,7 +948,7 @@ export default function ReservarTurno() {
                         ? "text-yellow-400"
                         : esPadel
                         ? "text-blue-700"
-                        : esBarberia
+                        : esCualquierBarberia
                         ? "text-yellow-400"
                         : "text-slate-800"
                     }
@@ -994,14 +992,14 @@ export default function ReservarTurno() {
                                   ? "bg-yellow-500 text-black border-yellow-500"
                                   : esPadel
                                   ? "bg-blue-600 text-white border-blue-600"
-                                  : esBarberia
+                                  : esCualquierBarberia
                                   ? "bg-yellow-500 text-black border-yellow-500"
                                   : "bg-emerald-600 text-white border-emerald-600"
                                 : esLavadero
                                 ? "bg-zinc-900 text-yellow-300 border-zinc-700 hover:border-yellow-500"
                                 : esPadel
                                 ? "bg-white text-blue-700 border-blue-300 hover:bg-blue-50"
-                                : esBarberia
+                                : esCualquierBarberia
                                 ? "bg-zinc-900 text-yellow-300 border-zinc-700 hover:border-yellow-500"
                                 : "bg-white text-slate-700 border-slate-300 hover:bg-emerald-50"
                             }
@@ -1047,7 +1045,7 @@ export default function ReservarTurno() {
                   ? "bg-yellow-500 hover:bg-yellow-400 text-black"
                   : esPadel
                   ? "bg-blue-600 hover:bg-blue-700 text-white"
-                  : esBarberia
+                  : esCualquierBarberia
                   ? "bg-yellow-500 hover:bg-yellow-400 text-black"
                   : "bg-emerald-600 hover:bg-emerald-700 text-white"
               }
@@ -1063,7 +1061,7 @@ export default function ReservarTurno() {
                 ? "Confirmar reserva"
                 : esPadel
                 ? "Confirmar reserva"
-                : esBarberia
+                : esCualquierBarberia
                 ? "Confirmar turno"
                 : "Confirmar turno"
             }
@@ -1077,7 +1075,6 @@ export default function ReservarTurno() {
     </div>
   );
 }
-
 
 
 
