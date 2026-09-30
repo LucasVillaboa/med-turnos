@@ -151,14 +151,17 @@ export async function POST(req: Request) {
           hora: data.hora,
           barbero: barberoFinal,
 
-          // Datos del servicio para Barbería
-          servicio: data.doctor === "barberia"
-            ? data.servicio
-            : null,
+          // Datos del servicio para Barbería real y demo
+servicio:
+  data.doctor === "barberia" || data.doctor === "barber"
+    ? data.servicio
+    : null,
 
-          precio: data.doctor === "barberia"
-            ? data.precio
-            : null,
+precio:
+  data.doctor === "barberia" || data.doctor === "barber"
+    ? data.precio
+    : null,
+      
         },
       ]);
 
