@@ -9,7 +9,6 @@ import {
   Scissors,
 } from "lucide-react";
 
-
 type Turno = {
   nombre?: string;
   telefono?: string;
@@ -18,6 +17,7 @@ type Turno = {
   barbero?: string;
   servicio?: string;
   precio?: number | string;
+  doctor?: string;
 };
 
 export default function Exito() {
@@ -64,6 +64,10 @@ export default function Exito() {
     return `${partes[2]}/${partes[1]}/${partes[0]}`;
   };
 
+  // Nombre según el origen de la reserva
+  const nombreNegocio =
+    turno?.doctor === "barberia" ? "El Templo" : "Barbería";
+
   return (
     <main className="min-h-screen bg-[#0b0b0b] text-white flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-md">
@@ -84,7 +88,7 @@ export default function Exito() {
           </div>
 
           <p className="text-[#c9a227] uppercase tracking-[0.25em] text-xs font-semibold mt-6">
-            El Templo
+            {nombreNegocio}
           </p>
 
           <h1 className="text-3xl font-bold mt-2">
@@ -234,11 +238,10 @@ export default function Exito() {
           <p className="text-sm text-gray-500">
             Te esperamos en{" "}
             <span className="text-gray-300">
-              El Templo
+              {nombreNegocio}
             </span>
             .
           </p>
-
 
         </div>
 
