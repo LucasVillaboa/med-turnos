@@ -34,6 +34,7 @@ export default function ReservarTurno() {
   const [horarios, setHorarios] = useState<string[]>([]);
   const [ocupados, setOcupados] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [mensajeValidacion, setMensajeValidacion] = useState("");
 
   // ==========================================
   // GENERAR HORARIOS
@@ -273,6 +274,51 @@ export default function ReservarTurno() {
   const handleSubmit = async (e: any) => {
 
     e.preventDefault();
+
+    setMensajeValidacion("");
+
+    const faltantes: string[] = [];
+
+    if (!form.nombre.trim()) {
+      faltantes.push("nombre");
+    }
+
+    if (!form.telefono.trim()) {
+      faltantes.push("teléfono");
+    }
+
+    if (esCualquierBarberia && !form.servicio) {
+      faltantes.push("servicio");
+    }
+
+    if (esBarberia && !form.barbero) {
+      faltantes.push("barbero");
+    }
+
+    if (!form.fecha) {
+      faltantes.push("fecha");
+    }
+
+    if (!form.hora) {
+      faltantes.push("horario");
+    }
+
+    if (faltantes.length > 0) {
+      const lista =
+        faltantes.length === 1
+          ? faltantes[0]
+          : faltantes.length === 2
+          ? `${faltantes[0]} y ${faltantes[1]}`
+          : `${faltantes.slice(0, -1).join(", " )} y ${
+              faltantes[faltantes.length - 1]
+            }`;
+
+      setMensajeValidacion(
+        `Completá los siguientes datos para confirmar tu turno: ${lista}.`
+      );
+
+      return;
+    }
 
     setLoading(true);
 
@@ -539,6 +585,7 @@ export default function ReservarTurno() {
         {/* FORM */}
         <form
           onSubmit={handleSubmit}
+          noValidate
           className="flex flex-col gap-4"
         >
 
@@ -1024,13 +1071,22 @@ export default function ReservarTurno() {
             )
           }
 
+          {/* AVISO DE VALIDACIÓN */}
+          {mensajeValidacion && (
+            <div className="mb-2 rounded-2xl border border-yellow-500/30 bg-yellow-500/10 px-4 py-4 text-sm text-yellow-300">
+              <p className="font-semibold">
+                ⚠️ Completá todos los datos
+              </p>
+
+              <p className="mt-1 text-yellow-200/80">
+                {mensajeValidacion}
+              </p>
+            </div>
+          )}
+
           {/* BOTON */}
           <button
-            disabled={
-              !form.hora ||
-              loading ||
-              (esBarberia && !form.servicio)
-            }
+            disabled={loading}
             className={`
               mt-6
               min-h-[58px]
