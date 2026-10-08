@@ -863,56 +863,57 @@ export default function ReservarTurno() {
                 </label>
 
                 <select
-                  required
-                  value={form.barbero}
-                  onChange={(e) =>
-                    handleBarberoChange(e.target.value)
-                  }
-                  className="
-                    w-full
-                    min-h-[56px]
-                    rounded-2xl
-                    px-4
-                    outline-none
-                    transition
-                    border
-                    bg-zinc-900
-                    border-zinc-700
-                    text-zinc-400
-                    focus:border-yellow-500
-                  "
-                >
+  required
+  value={form.barbero}
+  onChange={(e) =>
+    handleBarberoChange(e.target.value)
+  }
+  className="
+    w-full
+    h-[56px]
+    appearance-none
+    rounded-2xl
+    px-4
+    outline-none
+    transition
+    border
+    bg-zinc-900
+    border-zinc-700
+    text-zinc-400
+    text-base
+    leading-normal
+    focus:border-yellow-500
+    focus:ring-0
+  "
+>
+  <option value="" disabled>
+    Seleccioná un barbero
+  </option>
 
-                  <option value="" disabled>
-                    Seleccioná un barbero
-                  </option>
+  <option value="Cualquier barbero">
+    Cualquier barbero
+  </option>
 
-                  <option value="Cualquier barbero">
-                    Cualquier barbero
-                  </option>
+  <option value="Lucas">
+    Lucas
+  </option>
 
-                  <option value="Lucas">
-                    Lucas
-                  </option>
+  <option value="Agustin">
+    Agustin
+  </option>
 
-                  <option value="Agustin">
-                    Agustin
-                  </option>
+  <option value="Felipe">
+    Felipe
+  </option>
 
-                  <option value="Felipe">
-                    Felipe
-                  </option>
-
-                  <option value="Demian">
-                    Demian
-                  </option>
-
-                </select>
-
-              </div>
-
+  <option value="Demian">
+    Demian
+  </option>
+</select>
+</div>
             )
           }
+      
 
           {/* FECHA */}
           <div className="relative">
@@ -1123,8 +1124,8 @@ export default function ReservarTurno() {
             }
 
           </button>
-
-        </form>
+</form>
+        
 
       </div>
 
