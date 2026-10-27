@@ -102,13 +102,21 @@ export default async function DoctorPage({ params }: Props) {
      INICIO BARBERÍA
   ========================= */
 
+  // El Templo: página original del negocio
   if (esBarberia) {
     return <Barberia />;
   }
 
-if (esBarberDemo) {
-  return <BarberDemo />;
-}
+  // Demo genérica de barbería
+  if (esBarberDemo) {
+    return <BarberDemo />;
+  }
+
+  // La antigua ruta /barberia ya no debe mostrar
+  // la página predeterminada de turnos médicos.
+  if (doctor === "barberia") {
+    return null;
+  }
 
   /* =========================
      RESTO DE LOS RUBROS
