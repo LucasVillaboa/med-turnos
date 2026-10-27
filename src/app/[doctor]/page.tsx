@@ -79,7 +79,7 @@ export default async function DoctorPage({ params }: Props) {
   const esLavadero = doctor === "lavadero";
   const esFutbol5 = doctor === "futbol5";
   const esPadel = doctor === "padel";
-  const esBarberia = doctor === "barberia";
+  const esBarberia = doctor === "barberia_el_templo";
   const esBarberDemo = doctor === "barber";
 
   const doctors: Record<string, string> = {
@@ -861,7 +861,7 @@ function Barberia() {
         ========================= */}
 
         <Link
-          href="/barberia/reservar"
+          href="/barberia_el_templo/reservar"
           className="
             mt-8
             flex
