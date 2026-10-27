@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     // LÓGICA ESPECIAL PARA BARBERÍA
     // ==========================================
 
-    if (data.doctor === "barberia") {
+    if (data.doctor === "barberia_el_templo") {
 
       const barberos = [
         "Lucas",
