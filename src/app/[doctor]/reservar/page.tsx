@@ -12,7 +12,7 @@ export default function ReservarTurno() {
   const esLavadero = doctor === "lavadero";
   const esFutbol5 = doctor === "futbol5";
   const esPadel = doctor === "padel";
-  const esBarberia = doctor === "barberia";
+  const esBarberia = doctor === "barberia_el_templo";
   const esBarberDemo = doctor === "barber";
 
   const esCualquierBarberia = esBarberia || esBarberDemo;
@@ -184,6 +184,8 @@ export default function ReservarTurno() {
     const yaSeleccionado = serviciosSeleccionados.some(
       (item) => item.nombre === servicio
     );
+
+
 
     let nuevosServicios;
 
@@ -374,7 +376,7 @@ export default function ReservarTurno() {
       );
 
       // Vamos a la pantalla de confirmación
-      window.location.href = "/exito";
+window.location.href = "/exito";
 
     } catch {
 
@@ -790,6 +792,7 @@ export default function ReservarTurno() {
                       px-4
                       text-left
                       transition
+                      
 
                       ${
                         serviciosSeleccionados.some(
